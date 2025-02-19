@@ -41,7 +41,7 @@ const ContactUsDetails = () => {
   ];
 
   return (
-    <div className="relative py-16 bg-white pb-[100px]">
+    <div className="relative py-16 bg-white pb-[150px]">
       <div className="max-w-screen-xl max-h-screen mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <h5 className="text-xl font-bold text-purple-600">Locations</h5>

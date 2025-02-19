@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import EmailIllustrationSrc from "../../assets/img/email-illustration.svg";
 import ContactUsDetails from "./contactusdetails";
-
+import Footer from "../../components/footer/Footer";
 const TextColumn = styled.div(
   (props) => `
   width: 100%;
@@ -103,7 +103,8 @@ const ContactUs = () => {
           <Image imageSrc={EmailIllustrationSrc} />
         </div>
       </div>
-      <ContactUsDetails />
+      <ContactUsDetails/>
+      <Footer/>
     </div>
   );
 };
