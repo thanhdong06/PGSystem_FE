@@ -29,14 +29,10 @@ const Login = () => {
           <form onSubmit={handleSignUpSubmit}>
             <h1>Create Account</h1>
             <div className="social-container">
-              <a href="#" className="social">
-                <i className="fab fa-facebook-f"></i>
-              </a>
-              <a href="#" className="social">
-                <i className="fab fa-instagram"></i>
-              </a>
+             
+              
             </div>
-            <span>or use your email for registration</span>
+          
             <input type="text" placeholder="Name" required />
             <input type="email" placeholder="Email" required />
             <input type="password" placeholder="Password" required />
@@ -49,14 +45,9 @@ const Login = () => {
           <form onSubmit={handleSignInSubmit}>
             <h1>Sign In</h1>
             <div className="social-container">
-              <a href="#" className="social">
-                <i className="fab fa-facebook-f"></i>
-              </a>
-              <a href="#" className="social">
-                <i className="fab fa-instagram"></i>
-              </a>
+             
             </div>
-            <span>or use your account</span>
+           
             <input type="email" placeholder="Email" required />
             <input type="password" placeholder="Password" required />
             <a href="#">Forgot your password?</a>
