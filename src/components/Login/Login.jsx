@@ -4,7 +4,7 @@ import "./Login.css";
 const Login = () => {
   const [rightPanelActive, setRightPanelActive] = useState(false);
 
-  // Hàm xử lý khi người dùng submit form đăng nhập
+
   const handleSignInSubmit = (e) => {
     e.preventDefault();
     // Thực hiện xử lý đăng nhập tại đây (ví dụ: gọi API)
