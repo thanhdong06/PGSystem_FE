@@ -73,7 +73,7 @@ const Subscriptions = () => {
             {subscriptionPlans.map((plan, index) => (
               <div
                 key={index}
-                className="card border-black border-[1px] w-80 bg-base-100 shadow-lg flex flex-col"
+                className="card border-collapse border-[1px] w-80 bg-base-300 shadow-lg flex flex-col"
               >
                 <div className="card-body flex flex-col flex-grow">
                   {plan.isPopular && (
