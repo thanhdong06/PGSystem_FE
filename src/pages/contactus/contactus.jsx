@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import EmailIllustrationSrc from "../../assets/img/email-illustration.svg";
-import ContactUsDetails from "./contactusdetails";
+import ContactUsDetails from "./Contactusdetails";
 import Footer from "../../components/footer/Footer";
 const TextColumn = styled.div(
   (props) => `
