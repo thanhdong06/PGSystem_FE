@@ -1,13 +1,18 @@
-import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from 'react-icons/fa';
-
+import { useEffect, useState } from "react";
+import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
+import ThemeSwitch from "../../components/themeswitch/ThemeSwitch";
 const Footer = () => {
+
   return (
     <footer className="bg-gray-800 text-white">
       <div className="container mx-auto px-4 py-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
             <h3 className="text-xl font-bold mb-4">About Us</h3>
-            <p className="mb-4">We are a company dedicated to providing innovative solutions for our customers.</p>
+            <p className="mb-4">
+              We are a company dedicated to providing innovative solutions for
+              our customers.
+            </p>
             <div className="flex space-x-4">
               <a href="#" className="text-gray-400 hover:text-white transition-colors duration-300">
                 <FaFacebook className="w-6 h-6" />
@@ -26,10 +31,26 @@ const Footer = () => {
           <div>
             <h3 className="text-xl font-bold mb-4">Our Services</h3>
             <ul className="space-y-2">
-              <li><a href="/home" className="hover:text-gray-300 transition-colors duration-300">Home</a></li>
-              <li><a href="/aboutus" className="hover:text-gray-300 transition-colors duration-300">About Us</a></li>
-              <li><a href="/consult" className="hover:text-gray-300 transition-colors duration-300">Services</a></li>
-              <li><a href="/contactus" className="hover:text-gray-300 transition-colors duration-300">Contact</a></li>
+              <li>
+                <a href="/home" className="hover:text-gray-300 transition-colors duration-300">
+                  Home
+                </a>
+              </li>
+              <li>
+                <a href="/aboutus" className="hover:text-gray-300 transition-colors duration-300">
+                  About Us
+                </a>
+              </li>
+              <li>
+                <a href="/consult" className="hover:text-gray-300 transition-colors duration-300">
+                  Services
+                </a>
+              </li>
+              <li>
+                <a href="/contactus" className="hover:text-gray-300 transition-colors duration-300">
+                  Contact
+                </a>
+              </li>
             </ul>
           </div>
           <div>
@@ -48,11 +69,11 @@ const Footer = () => {
                 Subscribe
               </button>
             </form>
-
           </div>
         </div>
+        <ThemeSwitch />
         <div className="border-t border-gray-700 mt-8 pt-4 text-center">
-          <p className="text-sm">&copy; 2025 Pregnancy Growth Tracking System. All rights reserved.</p> 
+          <p className="text-sm">&copy; 2025 Pregnancy Growth Tracking System. All rights reserved.</p>
         </div>
       </div>
     </footer>
