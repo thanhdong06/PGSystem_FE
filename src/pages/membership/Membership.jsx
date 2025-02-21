@@ -64,7 +64,7 @@ const subscriptionPlans = [
   ];
   
 
-const Subscriptions = () => {
+const Membership = () => {
   return (
     <div>
       <div className="flex flex-col min-h-screen w-5/6 justify-center mx-auto">
@@ -141,4 +141,4 @@ const Subscriptions = () => {
   );
 };
 
-export default Subscriptions;
+export default Membership;
