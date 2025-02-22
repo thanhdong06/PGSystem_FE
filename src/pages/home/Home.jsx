@@ -70,20 +70,24 @@ const faqs = [
 const pregnancyTimeline = [
   {
     stage: "First Trimester (Weeks 1-12)",
-    description: "The baby’s heart begins to beat, and vital organs start forming."
+    description:
+      "The baby’s heart begins to beat, and vital organs start forming.",
   },
   {
     stage: "Second Trimester (Weeks 13-26)",
-    description: "The baby starts moving, and the mother may begin to feel kicks."
+    description:
+      "The baby starts moving, and the mother may begin to feel kicks.",
   },
   {
     stage: "Third Trimester (Weeks 27-40)",
-    description: "The baby gains weight, prepares for birth, and responds to external sounds."
+    description:
+      "The baby gains weight, prepares for birth, and responds to external sounds.",
   },
   {
     stage: "Due Date (Week 40)",
-    description: "The baby is ready for delivery! Time for labor and meeting your newborn."
-  }
+    description:
+      "The baby is ready for delivery! Time for labor and meeting your newborn.",
+  },
 ];
 
 function Home() {
@@ -166,6 +170,45 @@ function Home() {
                 </p>
               </div>
             </div>
+          </div>
+
+          {/* preg timeline section */}
+          <div className="flex flex-col">
+            <div className="flex justify-between">
+              <div className="text-base-content font-bold text-xl">
+                Pregnance Timeline
+              </div>
+              <button className="btn btn-dash btn-primary">More</button>
+            </div>
+            <ul className="timeline my-10">
+              {pregnancyTimeline.map((event, index) => (
+                <li key={index}>
+                  {index !== 0 && <hr />}
+                  <div
+                    className={`${
+                      index % 2 === 0 ? "timeline-start" : "timeline-end"
+                    } timeline-box`}
+                  >
+                    <strong>{event.stage}</strong>
+                    <p className="text-sm">{event.description}</p>
+                  </div>
+                  <div className="timeline-middle">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      className="h-5 w-5"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                </li>
+              ))}
+            </ul>
           </div>
           {/* faq section */}
           <div className="space-y-2 w-full my-2 mb-6">
