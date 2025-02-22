@@ -1,14 +1,17 @@
 import { useState, useEffect } from "react";
 import Footer from "../../components/footer/Footer";
+import { Link } from "react-router-dom";
+
 
 const AutoCarousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const images = [
-    "https://img.daisyui.com/images/stock/photo-1625726411847-8cbb60cc71e6.webp",
-    "https://img.daisyui.com/images/stock/photo-1609621838510-5ad474b7d25d.webp",
-    "https://img.daisyui.com/images/stock/photo-1414694762283-acccc27bca85.webp",
+    "https://www.shutterstock.com/image-photo/kindergarten-children-playing-different-musical-600nw-1284017200.jpg",
+    "https://thumbs.dreamstime.com/b/group-babies-playing-floor-nursery-children-day-care-center-fun-s-playroom-creche-135684186.jpg",
+    "https://img.lovepik.com/photo/50169/4425_lovepik-high-end-confinement-center-nurses-take-care-of-photo-image_wh300.jpg",
     "https://img.daisyui.com/images/stock/photo-1665553365602-b2fb8e5d1707.webp",
+    // "https://img.daisyui.com/images/stock/photo-1665553365602-b2fb8e5d1707.webp",
   ];
 
   useEffect(() => {
@@ -100,12 +103,9 @@ function Home() {
             <div className="basis-5/6 self-center text-left pl-20 font-bold text-2xl text-black">
               Pregnancy Growth <br /> Tracking System
             </div>
-            <div className="text-justify px-10 py-5 bg-cyan-200 rounded-xl">
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-            </div>
-            <div>Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
-            <div>Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
-          </div>
+           
+            
+          </div>  
 
           <div className="relative w-full">
             {/* Image Banner (Overlay on Carousel) */}
@@ -239,9 +239,12 @@ function Home() {
                 Get personalized pregnancy insights, join discussion groups, and
                 track your journey.
               </p>
-              <button className="px-8 py-3 bg-white text-teal-600 rounded-lg text-lg hover:bg-gray-100">
-                Create Free Account
-              </button>
+              <a
+               href="/login"
+              className="px-8 py-3 bg-white text-teal-600 rounded-lg text-lg hover:bg-gray-100"
+            >
+             Create Free Account
+</a>
             </div>
           </div>
         </div>
