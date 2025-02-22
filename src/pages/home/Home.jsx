@@ -1,28 +1,74 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import Footer from "../../components/footer/Footer";
+
+const AutoCarousel = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const images = [
+    "https://img.daisyui.com/images/stock/photo-1625726411847-8cbb60cc71e6.webp",
+    "https://img.daisyui.com/images/stock/photo-1609621838510-5ad474b7d25d.webp",
+    "https://img.daisyui.com/images/stock/photo-1414694762283-acccc27bca85.webp",
+    "https://img.daisyui.com/images/stock/photo-1665553365602-b2fb8e5d1707.webp",
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prevSlide) => (prevSlide + 1) % images.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="carousel w-full relative h-[400px] overflow-hidden">
+      {images.map((img, index) => (
+        <div
+          key={index}
+          className={`carousel-item absolute inset-0 w-full transition-opacity duration-700 ${
+            index === currentSlide ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          <img
+            src={img}
+            className="w-full h-full object-cover"
+            alt={`Slide ${index + 1}`}
+          />
+        </div>
+      ))}
+    </div>
+  );
+};
 
 function Home() {
   return (
     <div>
       <div className="flex justify-center w-full h-screen">
-        <div className="justify justify-center intems-center w-4/5 h-screen drop-shadow-sm">
+        <div className="justify justify-center items-center w-4/5 h-screen drop-shadow-sm">
+          {/* Header Section */}
           <div className="flex flex-row gap-10 px-10 py-10 bg-[#adecda] h-[100px]">
             <div className="basis-5/6 self-center text-left pl-20 font-bold text-2xl text-black">
               Pregnancy Growth <br /> Tracking System
             </div>
-            <div className="text-justify px-10 py-5 bg-cyan-200 rounded-xl ">
+            <div className="text-justify px-10 py-5 bg-cyan-200 rounded-xl">
               Lorem ipsum dolor sit amet consectetur, adipisicing elit.
             </div>
-
             <div>Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
-
             <div>Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
           </div>
-          <img
-            src="https://assets.babycenter.com/ims/2023/11/BabyCenter-Trust_Wave-Desktop.svg"
-            className="w-full h-auto"
-          />
-          <div className="relative">
+
+          <div className="relative w-full">
+            {/* Image Banner (Overlay on Carousel) */}
+            <img
+              src="https://assets.babycenter.com/ims/2023/11/BabyCenter-Trust_Wave-Desktop.svg"
+              className="absolute top-0 left-1/2 transform -translate-x-1/2 z-10 w-full h-auto"
+            />
+
+            {/* Auto Carousel (Background) */}
+            <AutoCarousel />
+          </div>
+
+          {/* Call to Action Banner */}
+          <div className="relative mt-[-6px]">
             <img
               src="/api/placeholder/1200/400"
               alt="Pregnancy tracking banner"
@@ -42,6 +88,7 @@ function Home() {
             </div>
           </div>
 
+          {/* Features Section */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-8">
             <div className="p-6 bg-base-100 rounded-xl shadow-lg">
               <div className="text-blue-500 mb-4">
@@ -74,6 +121,7 @@ function Home() {
             </div>
           </div>
 
+          {/* Community Section */}
           <div className="bg-teal-600 text-white py-16">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
               <h2 className="text-3xl font-bold mb-4">
@@ -89,7 +137,6 @@ function Home() {
             </div>
           </div>
         </div>
-
       </div>
       <Footer />
     </div>
