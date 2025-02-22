@@ -39,11 +39,58 @@ const AutoCarousel = () => {
   );
 };
 
+const faqs = [
+  {
+    question: "How do I create an account?",
+    answer:
+      'Click the "Sign Up" button in the top right corner and follow the registration process.',
+  },
+  {
+    question: "How do I get started on this website?",
+    answer:
+      "Simply sign up, choose a membership plan, and start tracking your pregnancy journey.",
+  },
+  {
+    question: "How does pregnancy tracking work?",
+    answer:
+      "Our system allows you to log fetal growth metrics, receive health alerts, and set reminders for medical checkups.",
+  },
+  {
+    question: "What are the key fetal growth milestones?",
+    answer:
+      "Our system provides weekly growth tracking, including weight and length measurements, based on medical guidelines.",
+  },
+  {
+    question: "How can I set pregnancy reminders?",
+    answer:
+      "You can set reminders for doctor appointments, vaccinations, and important pregnancy milestones in your dashboard.",
+  },
+];
+
+const pregnancyTimeline = [
+  {
+    stage: "First Trimester (Weeks 1-12)",
+    description: "The baby’s heart begins to beat, and vital organs start forming."
+  },
+  {
+    stage: "Second Trimester (Weeks 13-26)",
+    description: "The baby starts moving, and the mother may begin to feel kicks."
+  },
+  {
+    stage: "Third Trimester (Weeks 27-40)",
+    description: "The baby gains weight, prepares for birth, and responds to external sounds."
+  },
+  {
+    stage: "Due Date (Week 40)",
+    description: "The baby is ready for delivery! Time for labor and meeting your newborn."
+  }
+];
+
 function Home() {
   return (
     <div>
-      <div className="flex justify-center w-full h-screen">
-        <div className="justify justify-center items-center w-4/5 h-screen drop-shadow-sm">
+      <div className="flex justify-center w-full min-h-screen">
+        <div className="justify justify-center items-center w-4/5 min-h-screen drop-shadow-sm">
           {/* Header Section */}
           <div className="flex flex-row gap-10 px-10 py-10 bg-[#adecda] h-[100px]">
             <div className="basis-5/6 self-center text-left pl-20 font-bold text-2xl text-black">
@@ -120,7 +167,25 @@ function Home() {
               </div>
             </div>
           </div>
-
+          {/* faq section */}
+          <div className="space-y-2 w-full my-2 mb-6">
+            {faqs.map((faq, index) => (
+              <div
+                key={index}
+                className="collapse collapse-arrow bg-base-200 border border-base-300"
+              >
+                <input
+                  type="radio"
+                  name="faq-accordion"
+                  defaultChecked={index === 0}
+                />
+                <div className="collapse-title font-semibold">
+                  {faq.question}
+                </div>
+                <div className="collapse-content text-sm">{faq.answer}</div>
+              </div>
+            ))}
+          </div>
           {/* Community Section */}
           <div className="bg-teal-600 text-white py-16">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
