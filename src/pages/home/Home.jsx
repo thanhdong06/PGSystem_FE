@@ -9,8 +9,8 @@ const AutoCarousel = () => {
   const images = [
     "https://www.shutterstock.com/image-photo/kindergarten-children-playing-different-musical-600nw-1284017200.jpg",
     "https://thumbs.dreamstime.com/b/group-babies-playing-floor-nursery-children-day-care-center-fun-s-playroom-creche-135684186.jpg",
-    "https://img.lovepik.com/photo/50169/4425_lovepik-high-end-confinement-center-nurses-take-care-of-photo-image_wh300.jpg",
-    "https://img.daisyui.com/images/stock/photo-1665553365602-b2fb8e5d1707.webp",
+    "https://static.vecteezy.com/system/resources/thumbnails/049/218/180/small_2x/best-selling-natural-and-organic-baby-care-products-photo.jpeg",
+    "https://pediatrixmd.com/wp-content/uploads/2022/11/tips-for-taking-care-of-a-newborn-baby-feat.jpg",
     // "https://img.daisyui.com/images/stock/photo-1665553365602-b2fb8e5d1707.webp",
   ];
 
