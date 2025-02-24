@@ -1,31 +1,42 @@
-import Footer from "./components/footer/Footer";
-import { ToastContainer, Slide } from "react-toastify";
-import React from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
-import { Home, Login, Header } from "./components";
+
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
+// import Footer from './components/footer/Footer'
+import Home from './pages/home/Home'
+import ContactUs from "./pages/contactus/contactus"
+import Membership from "./pages/membership/Membership";
+import Login from "./pages/Login/Login";
+
 
 function App() {
-  const location = useLocation();
-  const isLoginPage = location.pathname === "/login";
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <Home/>,
+    },
+    {
+      path: "/home",
+      element: <Home />,
+    },
+    {
+      path: "/contact",
+      element: <ContactUs/>,
+    },
+    {
+      path: "/membership",
+      element: <Membership />,
+    },
+    
+    {
+      path: "/login",
+      element: <Login/>,
+    },
+    
+   
+   
+    ]);
+  return <RouterProvider router={router} />;
 
-  return (
-    <div>
-      <ToastContainer
-        transition={Slide}
-        autoClose={2000}
-        newestOnTop={true}
-        pauseOnHover={true}
-        pauseOnFocusLoss={false}
-        limit={5}
-      />
-      {!isLoginPage && <Header />}
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/" element={<Home />} />
-      </Routes>
-      {!isLoginPage && <Footer/>} 
-    </div>
-  );
 }
 
 export default App;
