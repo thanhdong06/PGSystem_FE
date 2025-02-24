@@ -1,8 +1,13 @@
 .footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
   background-color: #1a202c;
   color: #fff;
   padding: 2rem 0;
   font-family: Arial, sans-serif;
+  z-index: 10; /* Đảm bảo Footer nằm trên các phần khác nếu cần */
 }
 
 .footer-container {
