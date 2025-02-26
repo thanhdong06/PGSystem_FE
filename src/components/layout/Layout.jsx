@@ -1,13 +1,49 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Navbar from "../Navbar/Navbar";
 import Sidebar from "../Sidebar/Sidebar";
+import { use } from "react";
 
 const Layout = ({ children }) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const searchInputRef = useRef(null);
+  const closeSidebarwithESC = useRef(null);
 
   const toggleDrawer = () => {
-    setDrawerOpen(!drawerOpen);
+    setDrawerOpen((prev) => !prev);
   };
+  // Ctrl + K short cut for search  
+  useEffect(() => {
+    const handleShortcut = (event) => {
+      if (event.ctrlKey && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+
+        setDrawerOpen(true);
+
+        setTimeout(() => {
+          if (searchInputRef.current) {
+            searchInputRef.current.focus();
+          }
+        }, 100);
+      }
+    };
+
+    document.addEventListener("keydown", handleShortcut);
+    return () => {
+      document.removeEventListener("keydown", handleShortcut);
+    };
+  }, []);
+  // ESC close Sidebar
+  useEffect(() => {
+    closeSidebarwithESC.current = (event) => {
+      if (event.key === "Escape") {
+        setDrawerOpen(false);
+      }
+    };
+    document.addEventListener("keydown", closeSidebarwithESC.current);
+    return () => {
+      document.removeEventListener("keydown", closeSidebarwithESC.current);
+    };
+  }, []);
 
   return (
     <div className="drawer">
@@ -27,7 +63,7 @@ const Layout = ({ children }) => {
       </div>
 
       {/* Sidebar Component */}
-      <Sidebar toggleDrawer={toggleDrawer} />
+      <Sidebar toggleDrawer={toggleDrawer} searchInputRef={searchInputRef} />
     </div>
   );
 };
