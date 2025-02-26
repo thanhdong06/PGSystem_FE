@@ -10,7 +10,7 @@ const Layout = ({ children }) => {
     setDrawerOpen((prev) => !prev);
   };
 
-  // ✅ Auto-focus search when sidebar opens via `Ctrl + K`
+  //  Auto-focus search when sidebar Ctrl + K
   useEffect(() => {
     const handleShortcut = (event) => {
       if (event.ctrlKey && event.key.toLowerCase() === "k") {
@@ -25,18 +25,18 @@ const Layout = ({ children }) => {
     };
   }, []);
 
-  // ✅ Ensure the search input focuses **after** sidebar opens fully
+  //Ensure the search input focuses **after** sidebar opens fully
   useEffect(() => {
     if (drawerOpen) {
       setTimeout(() => {
         if (searchInputRef.current) {
           searchInputRef.current.focus();
         }
-      }, 250); // Increased delay to allow sidebar to fully open
+      }, 250); 
     }
   }, [drawerOpen]);
 
-  // ✅ Close sidebar with ESC
+  // Close sidebar with ESC
   useEffect(() => {
     const closeSidebarwithESC = (event) => {
       if (event.key === "Escape") {
