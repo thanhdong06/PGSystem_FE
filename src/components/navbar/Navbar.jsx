@@ -1,6 +1,6 @@
 import React from "react";
 import ThemeSwitch from "../themeswitch/ThemeSwitch";
-const Navbar = ({toggleDrawer}) => {
+const Navbar = ({ toggleDrawer }) => {
   return (
     <div>
       <div className="navbar bg-base-100 shadow-sm">
@@ -47,10 +47,26 @@ const Navbar = ({toggleDrawer}) => {
             </ul>
           </div>
           <a className="btn btn-ghost text-xl" onClick={toggleDrawer}>
-          ☰
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="w-6 h-6"
+            >
+              <path d="M3 6h18M3 12h12M3 18h6" />
+
+              <circle cx="17" cy="17" r="3" />
+              <path d="M20.5 20.5L19 19" />
+            </svg>
           </a>
-          <div className="w-[50px]"> <ThemeSwitch /></div>
-         
+          <div className="w-[50px]">
+            {" "}
+            <ThemeSwitch />
+          </div>
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
