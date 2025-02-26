@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import Footer from "../../components/footer/Footer";
-import Navbar from "../../components/Navbar/Navbar";
 import { Link } from "react-router-dom";
 
 
@@ -97,7 +96,6 @@ const pregnancyTimeline = [
 function Home() {
   return (
     <div>
-      <Navbar />
       <div className="flex justify-center w-full min-h-screen">
         <div className="justify justify-center items-center w-4/5 min-h-screen drop-shadow-sm">
         

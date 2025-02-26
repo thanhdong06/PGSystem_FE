@@ -1,6 +1,6 @@
 import React from "react";
 import ThemeSwitch from "../themeswitch/ThemeSwitch";
-const Navbar = () => {
+const Navbar = ({toggleDrawer}) => {
   return (
     <div>
       <div className="navbar bg-base-100 shadow-sm">
@@ -46,7 +46,7 @@ const Navbar = () => {
               </li>
             </ul>
           </div>
-          <a className="btn btn-ghost text-xl">
+          <a className="btn btn-ghost text-xl" onClick={toggleDrawer}>
           ☰
           </a>
           <div className="w-[50px]"> <ThemeSwitch /></div>

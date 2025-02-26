@@ -5,17 +5,18 @@ import Home from './pages/home/Home'
 import ContactUs from "./pages/contactus/contactus"
 import Membership from "./pages/membership/Membership";
 import Login from "./pages/Login/Login";
+import Layout from "./components/layout/Layout";
 
 
 function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Home/>,
+      element: <Layout><Home/></Layout>,
     },
     {
       path: "/home",
-      element: <Home />,
+      element:<Layout><Home/></Layout>,
     },
     {
       path: "/contact",
