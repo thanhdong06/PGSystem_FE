@@ -9,7 +9,7 @@ const Sidebar = ({ toggleDrawer }) => {
         className="drawer-overlay"
       ></label>
       <ul className="menu bg-base-200 text-base-content min-h-full w-80 p-4">
-        {/* Sidebar content here */}
+        {/*Sidebar content*/}
         <li>
           <a onClick={toggleDrawer}>
             <label className="input w-64">
@@ -35,8 +35,19 @@ const Sidebar = ({ toggleDrawer }) => {
             </label>
           </a>
         </li>
-        <li>
-          <a onClick={toggleDrawer}>Sidebar Item 2</a>
+        <li className="flex flex-col gap-2 mt-4">
+          <a onClick={toggleDrawer} className="">
+            Sidebar Item 2
+          </a>
+          <a onClick={toggleDrawer} className="">
+            Sidebar Item 3
+          </a>
+          <a onClick={toggleDrawer} className="">
+            Sidebar Item 4
+          </a>
+          <a onClick={toggleDrawer} className="">
+            Sidebar Item 5
+          </a>
         </li>
       </ul>
     </div>

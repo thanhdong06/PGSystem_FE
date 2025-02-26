@@ -23,7 +23,7 @@ const Layout = ({ children }) => {
       {/* Main Content */}
       <div className="drawer-content">
         <Navbar toggleDrawer={toggleDrawer} />
-        <div className="p-4">{children}</div>
+        <div className="">{children}</div>
       </div>
 
       {/* Sidebar Component */}
