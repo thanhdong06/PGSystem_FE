@@ -11,6 +11,7 @@ const subscriptionPlans = [
         "Kick & movement counter",
       ],
       unavailableFeatures: [
+        
         "Personalized pregnancy insights",
         "Doctor consultation reports",
         "AI-based pregnancy recommendations",
