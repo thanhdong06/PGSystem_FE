@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Footer from "../../components/footer/Footer";
+import Navbar from "../../components/Navbar/Navbar";
 
 const AutoCarousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -93,8 +94,10 @@ const pregnancyTimeline = [
 function Home() {
   return (
     <div>
+      <Navbar />
       <div className="flex justify-center w-full min-h-screen">
         <div className="justify justify-center items-center w-4/5 min-h-screen drop-shadow-sm">
+        
           {/* Header Section */}
           <div className="flex flex-row gap-10 px-10 py-10 bg-[#adecda] h-[100px]">
             <div className="basis-5/6 self-center text-left pl-20 font-bold text-2xl text-black">
@@ -244,8 +247,10 @@ function Home() {
               </button>
             </div>
           </div>
+          
         </div>
       </div>
+
       <Footer />
     </div>
   );
