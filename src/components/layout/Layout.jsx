@@ -1,29 +1,21 @@
 import { useEffect, useRef, useState } from "react";
 import Navbar from "../Navbar/Navbar";
 import Sidebar from "../Sidebar/Sidebar";
-import { use } from "react";
 
 const Layout = ({ children }) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const searchInputRef = useRef(null);
-  const closeSidebarwithESC = useRef(null);
 
   const toggleDrawer = () => {
     setDrawerOpen((prev) => !prev);
   };
-  // Ctrl + K short cut for search  
+
+  // ✅ Auto-focus search when sidebar opens via `Ctrl + K`
   useEffect(() => {
     const handleShortcut = (event) => {
       if (event.ctrlKey && event.key.toLowerCase() === "k") {
         event.preventDefault();
-
         setDrawerOpen(true);
-
-        setTimeout(() => {
-          if (searchInputRef.current) {
-            searchInputRef.current.focus();
-          }
-        }, 100);
       }
     };
 
@@ -32,16 +24,28 @@ const Layout = ({ children }) => {
       document.removeEventListener("keydown", handleShortcut);
     };
   }, []);
-  // ESC close Sidebar
+
+  // ✅ Ensure the search input focuses **after** sidebar opens fully
   useEffect(() => {
-    closeSidebarwithESC.current = (event) => {
+    if (drawerOpen) {
+      setTimeout(() => {
+        if (searchInputRef.current) {
+          searchInputRef.current.focus();
+        }
+      }, 250); // Increased delay to allow sidebar to fully open
+    }
+  }, [drawerOpen]);
+
+  // ✅ Close sidebar with ESC
+  useEffect(() => {
+    const closeSidebarwithESC = (event) => {
       if (event.key === "Escape") {
         setDrawerOpen(false);
       }
     };
-    document.addEventListener("keydown", closeSidebarwithESC.current);
+    document.addEventListener("keydown", closeSidebarwithESC);
     return () => {
-      document.removeEventListener("keydown", closeSidebarwithESC.current);
+      document.removeEventListener("keydown", closeSidebarwithESC);
     };
   }, []);
 
