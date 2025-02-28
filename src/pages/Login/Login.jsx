@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 import Footer from "../../components/footer/Footer";
 import "react-toastify/dist/ReactToastify.css";
-
-
+import "./Login.css"; // 
 
 const Login = () => {
   const [rightPanelActive, setRightPanelActive] = useState(false);
@@ -17,7 +16,6 @@ const Login = () => {
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
-      progress: undefined,
       style: {
         backgroundColor: "#28a745",
         color: "white",
@@ -36,7 +34,6 @@ const Login = () => {
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
-      progress: undefined,
       style: {
         backgroundColor: "#28a745",
         color: "white",
@@ -48,22 +45,8 @@ const Login = () => {
 
   return (
     <>
-      
-      <style>{`
-        .animate-gradient {
-          background: linear-gradient(-45deg,rgb(32, 188, 32),rgb(228, 109, 109),rgb(67, 206, 241),rgb(164, 157, 157));
-          background-size: 400% 400%;
-          animation: gradient 15s ease infinite;
-        }
-        @keyframes gradient {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }ư
-        }
-      `}</style>
-      
-      <div className="flex justify-center items-center min-h-screen animate-gradient">
-        <div className="bg-white rounded-lg shadow-lg w-80 p-8 flex flex-col items-center">
+      <div className="login-container animate-gradient flex justify-center items-center min-h-screen">
+        <div className="login-box bg-white rounded-lg shadow-lg w-80 p-8 flex flex-col items-center">
           <h1 className="text-2xl font-bold mb-6">
             {rightPanelActive ? "Create Account" : "Sign In"}
           </h1>
@@ -76,21 +59,20 @@ const Login = () => {
                 type="text"
                 placeholder="Name"
                 required
-                className="w-full px-4 py-3 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-"
+                className="w-full px-4 py-3 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               />
             )}
             <input
               type="email"
               placeholder="Email"
               required
-              className="w-full px-4 py-3 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-"
+              className="w-full px-4 py-3 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
             />
             <input
-            
               type="password"
               placeholder="Password"
               required
-              className="w-full px-4 py-3 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-"
+              className="w-full px-4 py-3 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
             />
             {!rightPanelActive && (
               <a href="#" className="text-sm text-gray-600 hover:underline">
