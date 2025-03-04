@@ -26,7 +26,7 @@ const Comment = ({
   return (
     <Link
       to={commentLink}
-      className="block max-w-[800px] bg-white shadow-md rounded-lg p-4 hover:bg-gray-100 transition"
+      className="block max-w-[800px] rounded-lg p-4  transition"
     >
       {/* User Info */}
       <div className="flex items-center gap-x-3">
@@ -49,7 +49,7 @@ const Comment = ({
         <div className="flex flex-col">
           <Link
             to={userProfileLink}
-            className="text-lg font-semibold text-gray-800 hover:underline"
+            className="text-lg font-semibold text-base-content hover:underline"
             onClick={(e) => e.stopPropagation()}
           >
             {userName}
@@ -59,7 +59,7 @@ const Comment = ({
       </div>
 
       {/* Comment Content */}
-      <div className="mt-3 text-gray-700 text-sm">
+      <div className="mt-3 text-base-content text-sm text-justify">
         {showMore ? commentText : truncatedText}
         {commentText.split(" ").length > 100 && (
           <button
