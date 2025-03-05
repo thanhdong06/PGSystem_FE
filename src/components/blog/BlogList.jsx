@@ -12,7 +12,7 @@ const BlogList = ({
 }) => {
   // Truncate text if it's longer than 300 characters
   const truncatedText =
-    text.length > 300 ? text.substring(0, 300) + "..." : text;
+    text.length > 250 ? text.substring(0, 250) + "..." : text;
 
   return (
     <div>
@@ -20,7 +20,7 @@ const BlogList = ({
         to={blogLink}
         className="block max-w-[300px] rounded-lg p-4 transition"
       ></Link>
-      <div className="border border-gray-200 rounded-lg shadow-sm w-[300px] h-[300px] p-4">
+      <div className="border border-gray-200 rounded-lg shadow-sm w-[300px] h-[250px] p-4">
         {/* User Info */}
         <div className="flex items-center gap-x-3">
           <Link
