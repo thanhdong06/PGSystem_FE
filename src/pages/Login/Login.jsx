@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Footer from "../../components/footer/Footer";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [rightPanelActive, setRightPanelActive] = useState(false);
@@ -13,7 +14,22 @@ const Login = () => {
     e.preventDefault();
     console.log("Đăng ký submit");
   };
+  const handleLogin = async (values) => {
+    try {
+      const response = await api.post("/v1/auth/login", values);
+      console.log(response);
+      const { admin, accessToken } = response.data;
 
+      localStorage.setItem("token", accessToken);
+      if (admin) {
+        navigate("/dashboard");
+      } else {
+        navigate("");
+      }
+    } catch (err) {
+      toast.err(err.response.data);
+    }
+  };
   return (
     <>
       <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-green-500 to-gray-300">
@@ -21,7 +37,12 @@ const Login = () => {
           <h1 className="text-2xl font-bold mb-6">
             {rightPanelActive ? "Create Account" : "Sign In"}
           </h1>
-          <form onSubmit={rightPanelActive ? handleSignUpSubmit : handleSignInSubmit} className="w-full">
+          <form
+            onSubmit={
+              rightPanelActive ? handleSignUpSubmit : handleSignInSubmit
+            }
+            className="w-full"
+          >
             {rightPanelActive && (
               <input
                 type="text"
@@ -43,7 +64,9 @@ const Login = () => {
               className="w-full px-4 py-3 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
             />
             {!rightPanelActive && (
-              <a href="#" className="text-sm text-gray-600 hover:underline">Forgot your password?</a>
+              <a href="#" className="text-sm text-gray-600 hover:underline">
+                Forgot your password?
+              </a>
             )}
             <button
               type="submit"
@@ -52,8 +75,13 @@ const Login = () => {
               {rightPanelActive ? "Sign Up" : "Sign In"}
             </button>
           </form>
-          <p className="mt-4 text-sm text-gray-600 cursor-pointer hover:underline" onClick={() => setRightPanelActive(!rightPanelActive)}>
-            {rightPanelActive ? "Already have an account? Sign In" : "Don't have an account? Sign Up"}
+          <p
+            className="mt-4 text-sm text-gray-600 cursor-pointer hover:underline"
+            onClick={() => setRightPanelActive(!rightPanelActive)}
+          >
+            {rightPanelActive
+              ? "Already have an account? Sign In"
+              : "Don't have an account? Sign Up"}
           </p>
         </div>
       </div>

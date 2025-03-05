@@ -76,10 +76,6 @@ const Comment = ({
 
       {/* Like & Comment Counts */}
       <div className="mt-4 flex items-center gap-x-4 text-gray-600 text-sm">
-        <div className="flex items-center gap-x-1">
-          <span>👍</span>
-          <span>{likes} Like{likes !== 1 ? "s" : ""}</span>
-        </div>
         
         <Link
           to={commentLink}

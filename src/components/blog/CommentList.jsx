@@ -1,6 +1,6 @@
 import React from "react";
 import Comment from "./Comment";
-
+import Footer from "../Footer/Footer";
 const comments = [
   {
     text: "Pregnancy is a beautiful journey filled with countless emotions, from excitement to nervousness. As the body changes, so do the emotions, and it's incredible how one moment you feel overwhelmed with joy and the next you're worrying about every tiny detail. The experience of feeling a baby grow inside you is truly miraculous. Every kick, every movement reminds you that you're nurturing a tiny human. While morning sickness and cravings can be tough, the anticipation of holding your baby makes it all worthwhile. The love a mother feels even before birth is indescribable, and it's an experience that changes you forever.",
@@ -8,7 +8,6 @@ const comments = [
     userAvatar: "https://randomuser.me/api/portraits/women/30.jpg",
     userProfileLink: "#",
     commentLink: "#",
-    likes: 234,
     comments: 23,
   },
   {
@@ -17,7 +16,6 @@ const comments = [
     userAvatar: "https://randomuser.me/api/portraits/men/31.jpg",
     userProfileLink: "#",
     commentLink: "#",
-    likes: 312,
     comments: 45,
   },
   {
@@ -26,7 +24,6 @@ const comments = [
     userAvatar: "https://randomuser.me/api/portraits/women/32.jpg",
     userProfileLink: "#",
     commentLink: "#",
-    likes: 198,
     comments: 30,
   }
 ];
@@ -34,7 +31,7 @@ const comments = [
 const CommentList = () => {
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-4">Comments</h1>
+      <h1 className="text-xl font-bold mb-4">Comments</h1>
       {comments.map((comment, index) => (
         <div key={index} className="w-max">
           <Comment {...comment} />
