@@ -5,9 +5,9 @@ import "react-toastify/dist/ReactToastify.css";
 import "./Login.css";
 
 const Login = () => {
-  const [rightPanelActive, setRightPanelActive] = useState(false);
+  const [rightPanelActive, setRightPanelActive] = useState(true);
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState(""); // Thêm state cho phone (dùng cho Sign Up)
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
 
   // Hàm xử lý Sign In
@@ -32,10 +32,8 @@ const Login = () => {
       const data = await response.json();
       console.log("Full response data:", data);
 
-      // Token thực sự nằm ở data.value.data.token
       if (data.value && data.value.data && data.value.data.token) {
         const { token, refreshToken, user } = data.value.data;
-
         console.log("Response token:", token);
 
         toast.success("Login success", {
@@ -53,7 +51,6 @@ const Login = () => {
           },
         });
 
-        // Lưu thông tin vào localStorage
         localStorage.setItem("Token", token);
         localStorage.setItem("refreshToken", refreshToken);
         localStorage.setItem("email", user.email);
@@ -62,8 +59,7 @@ const Login = () => {
 
         console.log("Saved token from localStorage:", localStorage.getItem("Token"));
 
-        // Chuyển hướng sau khi đăng nhập thành công (có thể bỏ comment khi sẵn sàng)
-        // window.location.href = "/";
+        // window.location.href = "/"; // Điều hướng sau khi đăng nhập nếu cần
       } else {
         throw new Error(data.value?.message || "Invalid email or password");
       }
@@ -85,7 +81,7 @@ const Login = () => {
     }
   };
 
-  // Hàm xử lý Sign Up (gọi API Register)
+ 
   const handleSignUpSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -95,8 +91,6 @@ const Login = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            // Lưu ý: curl mẫu có header 'accept: text/plain', bạn có thể thêm nếu cần:
-            // "accept": "text/plain",
           },
           body: JSON.stringify({ email, password, phone }),
         }
@@ -106,7 +100,6 @@ const Login = () => {
         throw new Error("Register failed");
       }
 
-      // Nếu API trả về dạng text, sử dụng response.text()
       const result = await response.text();
       console.log("Register response:", result);
 
@@ -125,7 +118,7 @@ const Login = () => {
         },
       });
 
-      // Reset input và chuyển về chế độ Sign In sau khi đăng ký thành công
+      // Reset input và chuyển sang trang Login sau khi đăng ký thành công
       setEmail("");
       setPhone("");
       setPassword("");
@@ -150,67 +143,103 @@ const Login = () => {
 
   return (
     <>
-      <div className="login-container animate-gradient flex justify-center items-center min-h-screen">
-        <div className="login-box bg-white rounded-lg shadow-lg w-80 p-8 flex flex-col items-center">
-          <h1 className="text-2xl font-bold mb-6">
-            {rightPanelActive ? "Create Account" : "Sign In"}
-          </h1>
-
-          <form
-            onSubmit={rightPanelActive ? handleSignUpSubmit : handleSignInSubmit}
-            className="w-full"
+      <div className="flex justify-center items-center min-h-screen bg-gradient-to-b from-[#c7ecee] via-[#82ccdd] to-[#079992]">
+        <div className="relative w-[350px] h-[500px] shadow-xl overflow-hidden rounded-xl">
+          {/* Form Sign Up */}
+          <div
+            className={`absolute top-0 left-0 w-full h-full transition-transform duration-700 ${
+              rightPanelActive ? "translate-y-0" : "-translate-y-full"
+            }`}
           >
-            <input
-              type="email"
-              placeholder="Email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-            {/* Hiển thị trường Phone khi ở chế độ Sign Up */}
-            {rightPanelActive && (
+            <form onSubmit={handleSignUpSubmit} className="flex flex-col items-center justify-center h-full bg-white">
+              <label
+                onClick={() => setRightPanelActive(true)}
+                className="text-3xl font-bold text-[#78e08f] cursor-pointer mb-6"
+              >
+                Sign Up
+              </label>
+              <input
+                type="email"
+                placeholder="Email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-4/5 py-2 px-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
               <input
                 type="tel"
                 placeholder="Phone"
                 required
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="w-full px-4 py-3 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-4/5 py-2 px-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-            )}
-            <input
-              type="password"
-              placeholder="Password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
+              <input
+                type="password"
+                placeholder="Password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-4/5 py-2 px-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <button
+                type="submit"
+                className="w-4/5 py-2 mt-2 text-white font-bold bg-[#573b8a] rounded-md hover:bg-[#6d44b8] transition"
+              >
+                Sign Up
+              </button>
+              <p
+                onClick={() => setRightPanelActive(false)}
+                className="mt-4 text-sm text-gray-600 cursor-pointer hover:underline"
+              >
+                Already have an account? Sign In
+              </p>
+            </form>
+          </div>
 
-            {/* Chỉ hiển thị link Forgot password khi ở chế độ Sign In */}
-            {!rightPanelActive && (
-              <a href="#" className="text-sm text-gray-600 hover:underline">
-                Forgot your password?
-              </a>
-            )}
-
-            <button
-              type="submit"
-              className="w-full bg-green-500 text-white py-3 mt-4 rounded-lg font-semibold hover:bg-green-600 transition"
-            >
-              {rightPanelActive ? "Sign Up" : "Sign In"}
-            </button>
-          </form>
-
-          <p
-            className="mt-4 text-sm text-gray-600 cursor-pointer hover:underline"
-            onClick={() => setRightPanelActive(!rightPanelActive)}
+          {/* Form Login */}
+          <div
+            className={`absolute top-0 left-0 w-full h-full transition-transform duration-700 ${
+              rightPanelActive ? "translate-y-full" : "translate-y-0"
+            }`}
           >
-            {rightPanelActive
-              ? "Already have an account? Sign In"
-              : "Don't have an account? Sign Up"}
-          </p>
+            <form onSubmit={handleSignInSubmit} className="flex flex-col items-center justify-center h-full bg-white">
+              <label
+                onClick={() => setRightPanelActive(false)}
+                className="text-3xl font-bold text-[#78e08f] cursor-pointer mb-6"
+              >
+                Login
+              </label>
+              <input
+                type="email"
+                placeholder="Email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-4/5 py-2 px-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-4/5 py-2 px-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <button
+                type="submit"
+                className="w-4/5 py-2 mt-2 text-white font-bold bg-[#573b8a] rounded-md hover:bg-[#6d44b8] transition"
+              >
+                Login
+              </button>
+              <p
+                onClick={() => setRightPanelActive(true)}
+                className="mt-4 text-sm text-gray-600 cursor-pointer hover:underline"
+              >
+                Don't have an account? Sign Up
+              </p>
+            </form>
+          </div>
         </div>
       </div>
       <Footer />
