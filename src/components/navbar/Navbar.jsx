@@ -197,7 +197,8 @@ const Navbar = ({ toggleDrawer }) => {
               <Link
                 to="/login"
                 className="link link-primary"
-                onClick={handleLogin}
+                // onClick={handleLogin}
+                //handlelogin = khi da login duoc chu k phai khi bam nut login=)
               >
                 Log in
               </Link>

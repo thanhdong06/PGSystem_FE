@@ -5,7 +5,7 @@ const BlogList = ({
   blogLink = "#",
   userProfileLink,
   userAvatar,
-  userName,
+  userName ='Peter Parker',
   commentLink,
   comments = 0,
   text = "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Earum similique, officiis iusto quidem reiciendis libero labore, natus sed quaerat quo repudiandae quos debitis aut ratione quae nisi! Illum reprehenderit, rem ullam quisquam quasi at temporibus voluptates cupiditate, recusandae quae, aliquid quidem? Porro velit consequuntur beatae neque suscipit, architecto quia saepe quo tenetur rerum expedita praesentium culpa soluta dolorum recusandae illo explicabo. Quas, ex temporibus excepturi laborum tenetur assumenda perspiciatis tempore aliquam fugit quae commodi, placeat vitae porro aut voluptas. Corporis non adipisci sed saepe autem recusandae vitae, voluptate molestias voluptas expedita consequuntur. Ut excepturi, commodi ad tempora autem vero provident modi minima dolores praesentium iste. Odit saepe ex sunt consequuntur cumque eius reprehenderit incidunt hic officiis quod nulla molestiae fugit aperiam, similique ipsum ipsa, laborum quam suscipit possimus quia quasi. Harum praesentium delectus esse, unde impedit numquam commodi dolor iure reprehenderit reiciendis nesciunt saepe recusandae explicabo quidem, culpa soluta aliquid expedita blanditiis laboriosam est perferendis. Iusto sapiente aliquid qui, quam tenetur accusamus, dolorem exercitationem neque aliquam molestiae minus. Est veniam, nisi iste, porro, eius quo possimus aliquam labore accusamus similique molestias deleniti repellat id voluptas? Neque aut officiis repellat! Natus corrupti quasi laboriosam neque tenetur quod. Numquam atque perspiciatis dignissimos.",
@@ -52,7 +52,7 @@ const BlogList = ({
         </div>
 
         {/* Blog Content */}
-        <p className="mt-3 text-gray-700 text-sm">{truncatedText}</p>
+        <p className="mt-3 text-gray-400 text-sm">{truncatedText}</p>
         {/* comment */}
       <div className="mt-4 flex items-center gap-x-4 text-gray-600 text-sm">
               
