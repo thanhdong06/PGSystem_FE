@@ -6,9 +6,13 @@ import ContactUs from "./pages/contactus/contactus";
 import Membership from "./pages/membership/Membership";
 import Login from "./pages/Login/Login";
 import Layout from "./components/layout/Layout";
+<<<<<<< HEAD
 import Test from "./components/Test";
 import CommentList from "./components/blog/CommentList";
 import Blog from "./pages/blog/Blog";
+=======
+import ReminderList from "./pages/Reminder/Reminder";
+>>>>>>> 2a2cde6a993321a238a41126af9eedc418baa521
 
 function App() {
   const router = createBrowserRouter([
@@ -40,6 +44,7 @@ function App() {
       path: "/login",
       element: <Login />,
     },
+<<<<<<< HEAD
 
     {
       path: "/test",
@@ -55,6 +60,14 @@ function App() {
     }
     
   
+=======
+    {
+      path: "/reminder",
+      element: <ReminderList/>,
+    },
+
+
+>>>>>>> 2a2cde6a993321a238a41126af9eedc418baa521
   ]);
 
   return (
