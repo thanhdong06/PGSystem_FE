@@ -6,6 +6,7 @@ import ContactUs from "./pages/contactus/contactus";
 import Membership from "./pages/membership/Membership";
 import Login from "./pages/Login/Login";
 import Layout from "./components/layout/Layout";
+import ReminderList from "./pages/Reminder/Reminder";
 
 function App() {
   const router = createBrowserRouter([
@@ -37,6 +38,12 @@ function App() {
       path: "/login",
       element: <Login />,
     },
+    {
+      path: "/reminder",
+      element: <ReminderList/>,
+    },
+
+
   ]);
 
   return (

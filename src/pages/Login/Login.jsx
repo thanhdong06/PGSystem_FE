@@ -7,6 +7,7 @@ import "./Login.css";
 const Login = () => {
   const [rightPanelActive, setRightPanelActive] = useState(true);
   const [email, setEmail] = useState("");
+  const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
 
@@ -53,8 +54,10 @@ const Login = () => {
 
         localStorage.setItem("Token", token);
         localStorage.setItem("refreshToken", refreshToken);
+        localStorage.setItem("fullName", fullName);
         localStorage.setItem("email", user.email);
         localStorage.setItem("phone", user.phone);
+      
         localStorage.setItem("role", user.role);
 
         console.log("Saved token from localStorage:", localStorage.getItem("Token"));
@@ -81,65 +84,69 @@ const Login = () => {
     }
   };
 
- 
-  const handleSignUpSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch(
-        "https://pgsystem-g2ehcecxdkd5bjex.southeastasia-01.azurewebsites.net/api/Authentication/Register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email, password, phone }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Register failed");
+  // Hàm xử lý Sign Up (gọi API Register)
+ // Hàm xử lý Sign Up (gọi API Register)
+const handleSignUpSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    const response = await fetch(
+      "https://pgsystem-g2ehcecxdkd5bjex.southeastasia-01.azurewebsites.net/api/Authentication/Register",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+     
+        body: JSON.stringify({ email, password, phone, FullName: fullName }),
       }
+    );
 
-      const result = await response.text();
-      console.log("Register response:", result);
-
-      toast.success("Register success", {
-        position: "top-right",
-        autoClose: 1500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        style: {
-          backgroundColor: "#28a745",
-          color: "white",
-          fontWeight: "bold",
-          borderRadius: "8px",
-        },
-      });
-
-      // Reset input và chuyển sang trang Login sau khi đăng ký thành công
-      setEmail("");
-      setPhone("");
-      setPassword("");
-      setRightPanelActive(false);
-    } catch (error) {
-      toast.error(error.message || "An error occurred", {
-        position: "top-right",
-        autoClose: 1500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        style: {
-          backgroundColor: "#dc3545",
-          color: "white",
-          fontWeight: "bold",
-          borderRadius: "8px",
-        },
-      });
+    if (!response.ok) {
+      throw new Error("Register failed");
     }
-  };
+
+    const result = await response.text();
+    console.log("Register response:", result);
+
+    toast.success("Register success", {
+      position: "top-right",
+      autoClose: 1500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      style: {
+        backgroundColor: "#28a745",
+        color: "white",
+        fontWeight: "bold",
+        borderRadius: "8px",
+      },
+    });
+
+    // Reset input và chuyển sang trang Login sau khi đăng ký thành công
+    setEmail("");
+    setFullName("");
+    setPhone("");
+    setPassword("");
+    setRightPanelActive(false);
+  } catch (error) {
+    toast.error(error.message || "An error occurred", {
+      position: "top-right",
+      autoClose: 1500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      style: {
+        backgroundColor: "#dc3545",
+        color: "white",
+        fontWeight: "bold",
+        borderRadius: "8px",
+      },
+    });
+  }
+};
+
 
   return (
     <>
@@ -166,6 +173,16 @@ const Login = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-4/5 py-2 px-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+              <input
+                type="text"
+                placeholder="Full Name"
+                required
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                className="w-4/5 py-2 px-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+
+
               <input
                 type="tel"
                 placeholder="Phone"
