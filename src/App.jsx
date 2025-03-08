@@ -37,10 +37,6 @@ function App() {
       element: <Test/>,
     },
     {
-      path:'/commentlist',
-      element:<CommentList/>
-    },
-    {
       path: '/blog',
       element: <Blog/>,
     }
