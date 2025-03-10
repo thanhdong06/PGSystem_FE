@@ -11,6 +11,7 @@ import CommentList from "./components/blog/CommentList";
 import Blog from "./pages/blog/Blog";
 
 import ReminderList from "./pages/Reminder/Reminder";
+import Profile from "./pages/Profile/Profile";
 
 
 function App() {
@@ -45,33 +46,25 @@ function App() {
     },
 
     {
-      path: "/test",
-      element: <Test/>,
-    },
-    {
-      path:'/commentlist',
-      element:<CommentList/>
-    },
-    {
       path: '/blog',
       element: <Blog/>,
     },
-    
-  
-
     {
       path: "/reminder",
       element: <ReminderList/>,
     },
 
-
+    {
+      path:'/Profile',
+      element:<Profile/>,
+    },
 
   ]);
 
   return (
     <>
       <RouterProvider router={router} />
-      <ToastContainer />
+      <ToastContainer/>
     </>
   );
 

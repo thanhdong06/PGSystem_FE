@@ -1,38 +1,44 @@
 import React, { useState, useEffect } from "react";
 import ThemeSwitch from "../themeswitch/ThemeSwitch";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Navbar = ({ toggleDrawer }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
-  const [isModalLogOut, setIsModalLogOut] = useState(false);
+  const navigate = useNavigate();
   const notifications = 3;
 
-  const handleLogin = () => {
-    setIsLoggedIn(true);
-  };
-
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-  };
-  // Get user from local storage
+  // On mount, check local storage for authentication data
   useEffect(() => {
-    const storeUser = localStorage.getItem("user");
-    if (storeUser) {
-      setUser(JSON.parse(storeUser));
+    const token = localStorage.getItem("token");
+    const storedUser = localStorage.getItem("user");
+    if (token) {
+      setIsLoggedIn(true);
     }
-  }, []); // Only run once when the component mounts
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
-  // // Handle logout
-  // const handleLogOut = async () => {
-  //   setIsModalLogOut(false);
-  //   localStorage.removeItem("token");
-  //   localStorage.removeItem("user");
-  //   setUser(null);
-  //   toast.success("Logged out successfully");
-
-  //   navigate("/?status=logout_success");
-  // };
+  const handleLogOut = () => {
+    console.log("Logout clicked");
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("refreshToken");
+    setUser(null);
+    setIsLoggedIn(false);
+    toast.success("Logged out successfully",{
+      autoClose: 700,
+      style: {
+        backgroundColor: "#28a745",
+        color: "white",
+        fontWeight: "bold",
+        borderRadius: "8px",
+      },
+    });
+  };
+  
 
   return (
     <div>
@@ -182,24 +188,30 @@ const Navbar = ({ toggleDrawer }) => {
               </div>
               <ul className="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow">
                 <li>
-                  <a className="justify-between">Profile</a>
+                <Link to="/Profile"
+                  className="justify-between">Profile
+                  </Link>
                 </li>
                 <li>
                   <a>Settings</a>
                 </li>
                 <li>
-                  <a onClick={handleLogout}>Logout</a>
-                </li>
+  <a
+    href="#"
+    onClick={(e) => {
+      e.preventDefault();
+      handleLogOut();
+    }}
+  >
+    Logout
+  </a>
+</li>
+
               </ul>
             </div>
           ) : (
             <div className="flex gap-2 place-content-stretch items-center">
-              <Link
-                to="/login"
-                className="link link-primary"
-                // onClick={handleLogin}
-                //handlelogin = khi da login duoc chu k phai khi bam nut login=)
-              >
+              <Link to="/login" className="link link-primary">
                 Log in
               </Link>
               <div className="divider divider-horizontal"></div>

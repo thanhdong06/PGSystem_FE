@@ -11,7 +11,7 @@ const Login = () => {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
 
-  // Hàm xử lý Sign In
+  // Handle Sign In
   const handleSignInSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -36,7 +36,7 @@ const Login = () => {
       if (data.value && data.value.data && data.value.data.token) {
         const { token, refreshToken, user } = data.value.data;
         console.log("Response token:", token);
-
+        console.log(data);
         toast.success("Login success", {
           position: "top-right",
           autoClose: 2000,
@@ -52,17 +52,15 @@ const Login = () => {
           },
         });
 
-        localStorage.setItem("Token", token);
+        // Store token and complete user object in local storage
+        localStorage.setItem("token", token);
         localStorage.setItem("refreshToken", refreshToken);
-        localStorage.setItem("fullName", fullName);
-        localStorage.setItem("email", user.email);
-        localStorage.setItem("phone", user.phone);
-      
-        localStorage.setItem("role", user.role);
+        localStorage.setItem("user", JSON.stringify(user));
 
-        console.log("Saved token from localStorage:", localStorage.getItem("Token"));
+        console.log("Saved token from localStorage:", localStorage.getItem("token"));
 
-        // window.location.href = "/"; // Điều hướng sau khi đăng nhập nếu cần
+        // Redirect to home page
+        window.location.href = "/";
       } else {
         throw new Error(data.value?.message || "Invalid email or password");
       }
@@ -84,69 +82,66 @@ const Login = () => {
     }
   };
 
-  // Hàm xử lý Sign Up (gọi API Register)
- // Hàm xử lý Sign Up (gọi API Register)
-const handleSignUpSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    const response = await fetch(
-      "https://pgsystem-g2ehcecxdkd5bjex.southeastasia-01.azurewebsites.net/api/Authentication/Register",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-     
-        body: JSON.stringify({ email, password, phone, FullName: fullName }),
+  // Handle Sign Up
+  const handleSignUpSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(
+        "https://pgsystem-g2ehcecxdkd5bjex.southeastasia-01.azurewebsites.net/api/Authentication/Register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password, phone, FullName: fullName }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Register failed");
       }
-    );
 
-    if (!response.ok) {
-      throw new Error("Register failed");
+      const result = await response.text();
+      console.log("Register response:", result);
+
+      toast.success("Register success", {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        style: {
+          backgroundColor: "#28a745",
+          color: "white",
+          fontWeight: "bold",
+          borderRadius: "8px",
+        },
+      });
+
+      // Reset input fields and switch to the Login panel after successful registration
+      setEmail("");
+      setFullName("");
+      setPhone("");
+      setPassword("");
+      setRightPanelActive(false);
+    } catch (error) {
+      toast.error(error.message || "An error occurred", {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        style: {
+          backgroundColor: "#dc3545",
+          color: "white",
+          fontWeight: "bold",
+          borderRadius: "8px",
+        },
+      });
     }
-
-    const result = await response.text();
-    console.log("Register response:", result);
-
-    toast.success("Register success", {
-      position: "top-right",
-      autoClose: 1500,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      style: {
-        backgroundColor: "#28a745",
-        color: "white",
-        fontWeight: "bold",
-        borderRadius: "8px",
-      },
-    });
-
-    // Reset input và chuyển sang trang Login sau khi đăng ký thành công
-    setEmail("");
-    setFullName("");
-    setPhone("");
-    setPassword("");
-    setRightPanelActive(false);
-  } catch (error) {
-    toast.error(error.message || "An error occurred", {
-      position: "top-right",
-      autoClose: 1500,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      style: {
-        backgroundColor: "#dc3545",
-        color: "white",
-        fontWeight: "bold",
-        borderRadius: "8px",
-      },
-    });
-  }
-};
-
+  };
 
   return (
     <>
@@ -181,8 +176,6 @@ const handleSignUpSubmit = async (e) => {
                 onChange={(e) => setFullName(e.target.value)}
                 className="w-4/5 py-2 px-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-
-
               <input
                 type="tel"
                 placeholder="Phone"
@@ -253,7 +246,7 @@ const handleSignUpSubmit = async (e) => {
                 onClick={() => setRightPanelActive(true)}
                 className="mt-4 text-sm text-gray-600 cursor-pointer hover:underline"
               >
-              Don't have an account? Sign Up
+                Don't have an account? Sign Up
               </p>
             </form>
           </div>
