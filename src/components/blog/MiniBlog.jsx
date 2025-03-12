@@ -20,7 +20,7 @@ const MiniBlog = ({
         to={blogLink}
         className="block max-w-[300px] rounded-lg p-4 transition"
       ></Link>
-      <div className="border border-gray-200 rounded-lg shadow-sm w-[300px] h-[250px] p-4">
+      <div className="border border-gray-200 rounded-lg shadow-sm w-[300px] h-[270px] p-4">
         {/* User Info */}
         <div className="flex items-center gap-x-3">
           <Link

@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Sidebar = ({ searchInputRef, toggleDrawer }) => {
   return (
@@ -29,7 +30,7 @@ const Sidebar = ({ searchInputRef, toggleDrawer }) => {
               </g>
             </svg>
             <input
-              ref={searchInputRef} 
+              ref={searchInputRef}
               type="search"
               className="grow"
               placeholder="Search"
@@ -40,12 +41,91 @@ const Sidebar = ({ searchInputRef, toggleDrawer }) => {
         </li>
 
         {/* Sidebar Links */}
-        <li className="flex flex-col gap-2 mt-4">
-          <a onClick={toggleDrawer}>Sidebar Item 2</a>
-          <a onClick={toggleDrawer}>Sidebar Item 3</a>
-          <a onClick={toggleDrawer}>Sidebar Item 4</a>
-          <a onClick={toggleDrawer}>Sidebar Item 5</a>
-        </li>
+        <ul className="menu bg-base-200 rounded-box w-64 p-4">
+          <div>
+            <a className="text-lg font-semibold text-primary">
+              🌟 Main Navigation
+            </a>
+          </div>
+
+          {/* General Section - Always Open */}
+          <li className="mt-2">
+            <details open>
+              <summary className="font-semibold cursor-pointer text-secondary">
+                📌 General
+              </summary>
+              <ul className="ml-4 space-y-2">
+                <li>
+                  <Link to="/home" onClick={toggleDrawer}>
+                    🏠 Home
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/contact" onClick={toggleDrawer}>
+                    📞 Contact Us
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/login" onClick={toggleDrawer}>
+                    🔑 Login
+                  </Link>
+                </li>
+              </ul>
+            </details>
+          </li>
+
+          {/* Membership & Blog Section - Starts Closed */}
+          <li className="mt-2">
+            <details>
+              <summary className="font-semibold cursor-pointer text-secondary">
+                📚 Membership & Blog
+              </summary>
+              <ul className="ml-4 space-y-2">
+                <li>
+                  <Link to="/membership" onClick={toggleDrawer}>
+                    🎟️ Membership
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/blog" onClick={toggleDrawer}>
+                    ✍️ Blog
+                  </Link>
+                </li>
+              </ul>
+            </details>
+          </li>
+
+          {/* Tools Section - Starts Closed */}
+          <li className="mt-2">
+            <details>
+              <summary className="font-semibold cursor-pointer text-secondary">
+                🛠️Tools 
+              </summary>
+              <ul className="ml-4 space-y-2">
+                <li>
+                  <Link to="/duedatecalculation" onClick={toggleDrawer}>
+                    📅 Due Date Calculator
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/ovulationcalculation" onClick={toggleDrawer}>
+                    🏵️ Ovulation Calculator
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/pregnancydiagnosis" onClick={toggleDrawer}>
+                    🩺 Pregnancy Diagnosis
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/babynamefinder" onClick={toggleDrawer}>
+                    👶 Baby Name Finder
+                  </Link>
+                </li>
+              </ul>
+            </details>
+          </li>
+        </ul>
       </ul>
     </div>
   );

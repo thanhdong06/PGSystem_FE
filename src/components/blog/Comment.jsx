@@ -83,14 +83,14 @@ const Comment = ({
       </div>
 
       {/* Reply & Comment Counts */}
-      <div className="mt-4 flex items-center gap-x-4 text-gray-600 text-sm">
+      {/* <div className="mt-4 flex items-center gap-x-4 text-gray-600 text-sm">
         <button
           onClick={() => setShowReplyInput(!showReplyInput)}
           className="flex items-center gap-x-1 hover:underline text-blue-500"
         >
           💬 Reply
         </button>
-      </div>
+      </div> */}
 
       {/* Reply Input */}
       {showReplyInput && (

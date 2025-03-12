@@ -97,7 +97,7 @@ const Test = () => {
 
           {/* Explanation Section */}
           <div className="mt-8 p-6 bg-transparent rounded-lg shadow-md">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">
+            <h2 className="text-2xl font-bold text-primary mb-4">
               How is the due date calculated?
             </h2>
             <p className="text-gray-600 mb-4">
@@ -167,9 +167,6 @@ const Test = () => {
           </div>
         </div>
 
-        <div className="col-start-6 col-end-8">
-          <BlogList />
-        </div>
       </div>
 
       <Footer />

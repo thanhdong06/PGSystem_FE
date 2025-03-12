@@ -61,7 +61,7 @@ const Navbar = ({ toggleDrawer }) => {
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow"
             >
               <li>
-                <a>Item 1</a>
+                <Link to="/home">🏠 Home</Link>
               </li>
               <li>
                 <a>Parent</a>
@@ -104,7 +104,7 @@ const Navbar = ({ toggleDrawer }) => {
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
             <li>
-              <a>Item 1</a>
+              <Link to="/home">🏠 Home</Link>
             </li>
             <li>
               <details>
