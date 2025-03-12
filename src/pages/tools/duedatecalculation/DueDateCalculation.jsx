@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import Navbar from "../components/Navbar/Navbar";
-import BlogList from "../components/blog/BlogList";
-import Footer from "../components/Footer/Footer";
+import React from "react";
+import { useState } from "react";
+import Navbar from "../../../components/Navbar/Navbar";
+import Footer from "../../../components/Footer/Footer";
 
-const Test = () => {
+const DueDateCalculation = () => {
   const [method, setMethod] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [dueDate, setDueDate] = useState(null);
@@ -39,16 +39,14 @@ const Test = () => {
 
   return (
     <div>
-      <Navbar />
-
-      <div className="grid grid-cols-7 py-6 max-w-screen my-4">
+      <div className="grid grid-cols-7 py-6 max-w-screen my-4 mb-10">
         <div className="col-start-2 col-span-3">
           <div className="font-bold font-sans text-4xl text-base-content mb-6 text-center">
             Due Date Calculator
           </div>
 
           {/* Selection & Calculation Box */}
-          <div className="flex flex-col justify-center items-center gap-6 min-w-[650px] min-h-[150px] bg-gray-100 rounded-lg p-8 shadow-md">
+          <div className="flex flex-col justify-center items-center gap-6 min-w-[650px] min-h-[150px] bg-transparent rounded-lg p-8 shadow-md">
             {/* Select Method */}
             <select
               className="select select-bordered w-11/12 transition-all duration-200 ease-in-out focus:ring-2 focus:ring-primary"
@@ -100,17 +98,17 @@ const Test = () => {
             <h2 className="text-2xl font-bold text-primary mb-4">
               How is the due date calculated?
             </h2>
-            <p className="text-gray-600 mb-4">
+            <p className="text-base-content mb-4">
               There are several ways to estimate your baby’s due date, and each
               method has its own approach. Here’s how they work and when they’re
               most useful.
             </p>
             <ul className="space-y-6">
               <li className="border-l-4 border-primary pl-4">
-                <h3 className="text-lg font-semibold text-gray-700">
+                <h3 className="text-lg font-semibold text-base-content">
                   📅 Last Menstrual Period (LMP)
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-base-content">
                   This is the most common method doctors use. It assumes you
                   ovulate **about 14 days** after your last period starts. To
                   estimate your due date, just **add 280 days (40 weeks)** to
@@ -122,10 +120,10 @@ const Test = () => {
               </li>
 
               <li className="border-l-4 border-primary pl-4">
-                <h3 className="text-lg font-semibold text-gray-700">
+                <h3 className="text-lg font-semibold text-base-content">
                   🧬 Conception Date
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-base-content">
                   If you know **exactly when you conceived**, this method is
                   even more accurate than using your period. The due date is
                   calculated by **adding 266 days (38 weeks)** to the date of
@@ -136,10 +134,10 @@ const Test = () => {
               </li>
 
               <li className="border-l-4 border-primary pl-4">
-                <h3 className="text-lg font-semibold text-gray-700">
+                <h3 className="text-lg font-semibold text-base-content">
                   🍼 IVF (In Vitro Fertilization)
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-base-content">
                   If you’ve had **IVF (in vitro fertilization)**, your due date
                   can be calculated with **high precision**. The formula is
                   simple: **Take your embryo transfer date, add 266 days, then
@@ -150,10 +148,10 @@ const Test = () => {
               </li>
 
               <li className="border-l-4 border-primary pl-4">
-                <h3 className="text-lg font-semibold text-gray-700">
+                <h3 className="text-lg font-semibold text-base-content">
                   🩺 Ultrasound Scan
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-base-content">
                   If you’re unsure about your last period or conception date, an
                   **ultrasound scan** can help. Doctors measure your baby’s size
                   to estimate how far along you are, then calculate your due
@@ -166,7 +164,6 @@ const Test = () => {
             </ul>
           </div>
         </div>
-
       </div>
 
       <Footer />
@@ -189,4 +186,4 @@ const Test = () => {
   );
 };
 
-export default Test;
+export default DueDateCalculation;

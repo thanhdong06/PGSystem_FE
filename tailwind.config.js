@@ -1,4 +1,5 @@
 import daisyui from "daisyui";
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -6,8 +7,22 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: [
+          '-apple-system',  // San Francisco on macOS & iOS
+          'BlinkMacSystemFont', // Chrome on macOS
+          '"Segoe UI"', // Windows
+          'Roboto', // Android
+          '"Helvetica Neue"', // Old macOS versions
+          'Arial', // Generic fallback
+          'sans-serif',
+        ],
+      },
+    },
   },
   plugins: [daisyui],
-  themes: ["light", "dark"],
-}
+  daisyui: {
+    themes: ["light", "dark"],
+  },
+};

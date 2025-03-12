@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 const Comment = ({
@@ -10,9 +10,11 @@ const Comment = ({
   likes = 0,
   comments = 0,
 }) => {
-  const [showMore, setShowMore] = React.useState(false);
+  const [showMore, setShowMore] = useState(false);
+  const [showReplyInput, setShowReplyInput] = useState(false);
+  const [replyText, setReplyText] = useState("");
+  const [replies, setReplies] = useState([]);
 
-  // Default comment text if none is provided
   const commentText =
     text && text.trim().length > 0
       ? text
@@ -23,11 +25,17 @@ const Comment = ({
       ? commentText.split(" ").slice(0, 100).join(" ") + "..."
       : commentText;
 
+  const handleReplySubmit = (e) => {
+    e.preventDefault();
+    if (replyText.trim()) {
+      setReplies([...replies, { text: replyText, userName: "You" }]);
+      setReplyText("");
+      setShowReplyInput(false);
+    }
+  };
+
   return (
-    <Link
-      to={commentLink}
-      className="block max-w-[800px] rounded-lg p-4  transition"
-    >
+    <div className="block max-w-[800px] rounded-lg p-4 transition">
       {/* User Info */}
       <div className="flex items-center gap-x-3">
         <Link
@@ -74,20 +82,52 @@ const Comment = ({
         )}
       </div>
 
-      {/* Like & Comment Counts */}
-      <div className="mt-4 flex items-center gap-x-4 text-gray-600 text-sm">
-        
-        <Link
-          to={commentLink}
+      {/* Reply & Comment Counts */}
+      {/* <div className="mt-4 flex items-center gap-x-4 text-gray-600 text-sm">
+        <button
+          onClick={() => setShowReplyInput(!showReplyInput)}
           className="flex items-center gap-x-1 hover:underline text-blue-500"
-          onClick={(e) => e.stopPropagation()}
         >
-          <span>💬</span>
-          <span>{comments} Comment{comments !== 1 ? "s" : ""}</span>
-        </Link>
-      </div>
-    </Link>
+          💬 Reply
+        </button>
+      </div> */}
+
+      {/* Reply Input */}
+      {showReplyInput && (
+        <form
+          onSubmit={handleReplySubmit}
+          className="mt-3 flex items-center gap-2"
+        >
+          <input
+            type="text"
+            value={replyText}
+            onChange={(e) => setReplyText(e.target.value)}
+            className="input input-bordered w-full text-sm"
+            placeholder="Write a reply..."
+          />
+          <button
+            type="submit"
+            className="btn btn-sm btn-primary"
+            disabled={!replyText.trim()}
+          >
+            Post
+          </button>
+        </form>
+      )}
+
+      {/* Render Replies */}
+      {replies.length > 0 && (
+        <div className="mt-3 border-l-2 pl-4">
+          {replies.map((reply, index) => (
+            <div key={index} className="mt-2">
+              <span className="font-semibold text-sm">{reply.userName}</span>
+              <p className="text-sm text-gray-700">{reply.text}</p>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 };
 
-export default Comment
+export default Comment;
