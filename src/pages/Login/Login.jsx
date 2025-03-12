@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import Footer from "../../components/footer/Footer";
 import "react-toastify/dist/ReactToastify.css";
-import "./Login.css";
+//    
 
 const Login = () => {
   const [rightPanelActive, setRightPanelActive] = useState(true);
