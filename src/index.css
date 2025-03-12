@@ -2,3 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 @plugin "daisyui";
+/* @plugin "daisyui/theme"{
+    name: "dark";
+    default: true;
+    --color-primary: #616161;
+    --text-primary:#616161;
+} */

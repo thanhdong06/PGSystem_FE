@@ -15,7 +15,7 @@ const ThemeSwitch = () => {
   };
 
   return (
-    <div className="flex justify-center mt-6">
+    <div className="flex justify-center">
       <label className="swap swap-rotate">
         {/* Hidden checkbox to toggle theme */}
         <input type="checkbox" onChange={toggleTheme} checked={theme === "dark"} />
