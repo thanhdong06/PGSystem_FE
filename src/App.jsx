@@ -15,7 +15,7 @@ import DueDateCalculation from "./pages/tools/duedatecalculation/DueDateCalculat
 import OvulationCalculator from "./pages/tools/ovulationcalculation/OvulationCalculation";
 import PregnancyDiagnosis from "./pages/tools/pregnancydiagnosis/PegnancyDiagnosis";
 import BabyNamesFinder from "./pages/tools/babynamesfinder/BabyNamesFinder";
-
+import PaymentSuccess from "./pages/payment/paymentsuccess";
 
 function App() {
   const router = createBrowserRouter([
@@ -38,13 +38,11 @@ function App() {
     {
       path: "/contact",
 
-    
       element: (
         <Layout>
           <ContactUs />
         </Layout>
       ),
-
     },
     {
       path: "/membership",
@@ -54,8 +52,15 @@ function App() {
         </Layout>
       ),
     },
+    {
+      path: "/paymentsuccess",
+      element: (
+        <Layout>
+          <PaymentSuccess />
+        </Layout>
+      ),
+    },
 
-    
     {
       path: "/login",
       element: <Login />,
@@ -71,27 +76,23 @@ function App() {
           <Blog />
         </Layout>
       ),
-
     },
 
     {
-
-      path: '/blog',
-      element: <Blog/>,
+      path: "/blog",
+      element: <Blog />,
     },
     {
       path: "/reminder",
-      element: <ReminderList/>,
+      element: <ReminderList />,
     },
 
     {
-      path:'/Profile',
-      element:<Profile/>,
+      path: "/Profile",
+      element: <Profile />,
     },
 
- 
-
-{
+    {
       path: "/duedatecalculation",
       element: (
         <Layout>
