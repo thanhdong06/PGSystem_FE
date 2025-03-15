@@ -1,88 +1,255 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 import Footer from "../../components/footer/Footer";
-import { useNavigate } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
+//    
 
 const Login = () => {
-  const [rightPanelActive, setRightPanelActive] = useState(false);
+  const [rightPanelActive, setRightPanelActive] = useState(true);
+  const [email, setEmail] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleSignInSubmit = (e) => {
+  // Handle Sign In
+  const handleSignInSubmit = async (e) => {
     e.preventDefault();
-    console.log("Đăng nhập submit");
-  };
-
-  const handleSignUpSubmit = (e) => {
-    e.preventDefault();
-    console.log("Đăng ký submit");
-  };
-  const handleLogin = async (values) => {
     try {
-      const response = await api.post("/v1/auth/login", values);
-      console.log(response);
-      const { admin, accessToken } = response.data;
+      const response = await fetch(
+        "https://pgsystem-g2ehcecxdkd5bjex.southeastasia-01.azurewebsites.net/api/Authentication/Login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        }
+      );
 
-      localStorage.setItem("token", accessToken);
-      if (admin) {
-        navigate("/dashboard");
-      } else {
-        navigate("");
+      if (!response.ok) {
+        throw new Error("Login failed");
       }
-    } catch (err) {
-      toast.err(err.response.data);
+
+      const data = await response.json();
+      console.log("Full response data:", data);
+
+      if (data.value && data.value.data && data.value.data.token) {
+        const { token, refreshToken, user } = data.value.data;
+        console.log("Response token:", token);
+        console.log(data);
+        toast.success("Login success", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          style: {
+            backgroundColor: "#28a745",
+            color: "white",
+            fontWeight: "bold",
+            borderRadius: "8px",
+          },
+        });
+
+        // Store token and complete user object in local storage
+        localStorage.setItem("token", token);
+        localStorage.setItem("refreshToken", refreshToken);
+        localStorage.setItem("user", JSON.stringify(user));
+
+        console.log("Saved token from localStorage:", localStorage.getItem("token"));
+
+        // Redirect to home page
+        window.location.href = "/";
+      } else {
+        throw new Error(data.value?.message || "Invalid email or password");
+      }
+    } catch (error) {
+      toast.error(error.message || "An error occurred", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        style: {
+          backgroundColor: "#dc3545",
+          color: "white",
+          fontWeight: "bold",
+          borderRadius: "8px",
+        },
+      });
     }
   };
+
+  // Handle Sign Up
+  const handleSignUpSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(
+        "https://pgsystem-g2ehcecxdkd5bjex.southeastasia-01.azurewebsites.net/api/Authentication/Register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password, phone, FullName: fullName }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Register failed");
+      }
+
+      const result = await response.text();
+      console.log("Register response:", result);
+
+      toast.success("Register success", {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        style: {
+          backgroundColor: "#28a745",
+          color: "white",
+          fontWeight: "bold",
+          borderRadius: "8px",
+        },
+      });
+
+      // Reset input fields and switch to the Login panel after successful registration
+      setEmail("");
+      setFullName("");
+      setPhone("");
+      setPassword("");
+      setRightPanelActive(false);
+    } catch (error) {
+      toast.error(error.message || "An error occurred", {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        style: {
+          backgroundColor: "#dc3545",
+          color: "white",
+          fontWeight: "bold",
+          borderRadius: "8px",
+        },
+      });
+    }
+  };
+
   return (
     <>
-      <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-green-500 to-gray-300">
-        <div className="bg-white rounded-lg shadow-lg w-96 p-8 flex flex-col items-center">
-          <h1 className="text-2xl font-bold mb-6">
-            {rightPanelActive ? "Create Account" : "Sign In"}
-          </h1>
-          <form
-            onSubmit={
-              rightPanelActive ? handleSignUpSubmit : handleSignInSubmit
-            }
-            className="w-full"
+      <div className="flex justify-center items-center min-h-screen bg-gradient-to-b from-[#c7ecee] via-[#82ccdd] to-[#079992]">
+        <div className="relative w-[350px] h-[500px] shadow-xl overflow-hidden rounded-xl">
+          {/* Form Sign Up */}
+          <div
+            className={`absolute top-0 left-0 w-full h-full transition-transform duration-700 ${
+              rightPanelActive ? "translate-y-0" : "-translate-y-full"
+            }`}
           >
-            {rightPanelActive && (
+            <form onSubmit={handleSignUpSubmit} className="flex flex-col items-center justify-center h-full bg-white">
+              <label
+                onClick={() => setRightPanelActive(true)}
+                className="text-3xl font-bold text-[#78e08f] cursor-pointer mb-6"
+              >
+                Sign Up
+              </label>
+              <input
+                type="email"
+                placeholder="Email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-4/5 py-2 px-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
               <input
                 type="text"
-                placeholder="Name"
+                placeholder="Full Name"
                 required
-                className="w-full px-4 py-3 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                className="w-4/5 py-2 px-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-            )}
-            <input
-              type="email"
-              placeholder="Email"
-              required
-              className="w-full px-4 py-3 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              required
-              className="w-full px-4 py-3 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
-            />
-            {!rightPanelActive && (
-              <a href="#" className="text-sm text-gray-600 hover:underline">
-                Forgot your password?
-              </a>
-            )}
-            <button
-              type="submit"
-              className="w-full bg-green-500 text-white py-3 mt-4 rounded-lg font-semibold hover:bg-green-600 transition"
-            >
-              {rightPanelActive ? "Sign Up" : "Sign In"}
-            </button>
-          </form>
-          <p
-            className="mt-4 text-sm text-gray-600 cursor-pointer hover:underline"
-            onClick={() => setRightPanelActive(!rightPanelActive)}
+              <input
+                type="tel"
+                placeholder="Phone"
+                required
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="w-4/5 py-2 px-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-4/5 py-2 px-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <button
+                type="submit"
+                className="w-4/5 py-2 mt-2 text-white font-bold bg-[#573b8a] rounded-md hover:bg-[#6d44b8] transition"
+              >
+                Sign Up
+              </button>
+              <p
+                onClick={() => setRightPanelActive(false)}
+                className="mt-4 text-sm text-gray-600 cursor-pointer hover:underline"
+              >
+                Already have an account? Sign In
+              </p>
+            </form>
+          </div>
+
+          {/* Form Login */}
+          <div
+            className={`absolute top-0 left-0 w-full h-full transition-transform duration-700 ${
+              rightPanelActive ? "translate-y-full" : "translate-y-0"
+            }`}
           >
-            {rightPanelActive
-              ? "Already have an account? Sign In"
-              : "Don't have an account? Sign Up"}
-          </p>
+            <form onSubmit={handleSignInSubmit} className="flex flex-col items-center justify-center h-full bg-white">
+              <label
+                onClick={() => setRightPanelActive(false)}
+                className="text-3xl font-bold text-[#78e08f] cursor-pointer mb-6"
+              >
+                Login
+              </label>
+              <input
+                type="email"
+                placeholder="Email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-4/5 py-2 px-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-4/5 py-2 px-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <button
+                type="submit"
+                className="w-4/5 py-2 mt-2 text-white font-bold bg-[#573b8a] rounded-md hover:bg-[#6d44b8] transition"
+              >
+                Login
+              </button>
+              <p
+                onClick={() => setRightPanelActive(true)}
+                className="mt-4 text-sm text-gray-600 cursor-pointer hover:underline"
+              >
+                Don't have an account? Sign Up
+              </p>
+            </form>
+          </div>
         </div>
       </div>
       <Footer />

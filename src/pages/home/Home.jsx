@@ -8,7 +8,6 @@ const AutoCarousel = () => {
 
   const images = [
     "https://www.shutterstock.com/image-photo/kindergarten-children-playing-different-musical-600nw-1284017200.jpg",
-    "https://thumbs.dreamstime.com/b/group-babies-playing-floor-nursery-children-day-care-center-fun-s-playroom-creche-135684186.jpg",
     "https://static.vecteezy.com/system/resources/thumbnails/049/218/180/small_2x/best-selling-natural-and-organic-baby-care-products-photo.jpeg",
     "https://pediatrixmd.com/wp-content/uploads/2022/11/tips-for-taking-care-of-a-newborn-baby-feat.jpg",
     // "https://img.daisyui.com/images/stock/photo-1665553365602-b2fb8e5d1707.webp",
@@ -133,9 +132,11 @@ function Home() {
                   Monitor your pregnancy progress, get personalized insights,
                   and connect with healthcare providers.
                 </p>
-                <button className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                  Get Started
-                </button>
+                <a href="/membership">
+  <button className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+    Get Started
+  </button>
+</a>
               </div>
             </div>
           </div>

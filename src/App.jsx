@@ -1,18 +1,21 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
 
-// import Footer from './components/footer/Footer'
 import Home from "./pages/home/Home";
 import ContactUs from "./pages/contactus/contactus";
 import Membership from "./pages/membership/Membership";
 import Login from "./pages/Login/Login";
 import Layout from "./components/layout/Layout";
 import Test from "./components/Test";
-import CommentList from "./components/blog/CommentList";
 import Blog from "./pages/blog/Blog";
+
+import ReminderList from "./pages/Reminder/Reminder";
+import Profile from "./pages/Profile/Profile";
 import DueDateCalculation from "./pages/tools/duedatecalculation/DueDateCalculation";
 import OvulationCalculator from "./pages/tools/ovulationcalculation/OvulationCalculation";
 import PregnancyDiagnosis from "./pages/tools/pregnancydiagnosis/PegnancyDiagnosis";
 import BabyNamesFinder from "./pages/tools/babynamesfinder/BabyNamesFinder";
+
 
 function App() {
   const router = createBrowserRouter([
@@ -34,11 +37,14 @@ function App() {
     },
     {
       path: "/contact",
+
+    
       element: (
         <Layout>
           <ContactUs />
         </Layout>
       ),
+
     },
     {
       path: "/membership",
@@ -49,6 +55,7 @@ function App() {
       ),
     },
 
+    
     {
       path: "/login",
       element: <Login />,
@@ -64,8 +71,27 @@ function App() {
           <Blog />
         </Layout>
       ),
+
+    },
+
+    {
+
+      path: '/blog',
+      element: <Blog/>,
     },
     {
+      path: "/reminder",
+      element: <ReminderList/>,
+    },
+
+    {
+      path:'/Profile',
+      element:<Profile/>,
+    },
+
+ 
+
+{
       path: "/duedatecalculation",
       element: (
         <Layout>
