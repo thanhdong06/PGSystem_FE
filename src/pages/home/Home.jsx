@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import Footer from "../../components/footer/Footer";
 import { Link } from "react-router-dom";
-
-
+import MiniBlog from "../blog/components/Miniblog";
+const BLOG_API =
+  "https://pgsystem-g2ehcecxdkd5bjex.southeastasia-01.azurewebsites.net/api/Blog/all";
 const AutoCarousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -93,19 +94,34 @@ const pregnancyTimeline = [
 ];
 
 function Home() {
+  const [blogs, setBlogs] = useState([]);
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const response = await fetch(BLOG_API);
+        if (!response.ok) throw new Error("Failed to fetch blogs.");
+        let data = await response.json();
+        data = data
+          .sort((a, b) => new Date(b.createAt) - new Date(a.createAt))
+          .slice(0, 10); // Take only the latest 10 blogs
+        setBlogs(data);
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+    fetchBlogs();
+  }, []);
   return (
     <div>
       <div className="flex justify-center w-full min-h-screen">
         <div className="justify justify-center items-center w-4/5 min-h-screen drop-shadow-sm">
-        
           {/* Header Section */}
           <div className="flex flex-row gap-10 px-10 py-10 bg-[#adecda] h-[100px]">
             <div className="basis-5/6 self-center text-left pl-20 font-bold text-2xl text-black">
               Pregnancy Growth <br /> Tracking System
             </div>
-           
-            
-          </div>  
+          </div>
 
           <div className="relative w-full">
             {/* Image Banner (Overlay on Carousel) */}
@@ -133,10 +149,10 @@ function Home() {
                   and connect with healthcare providers.
                 </p>
                 <a href="/membership">
-  <button className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-    Get Started
-  </button>
-</a>
+                  <button className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                    Get Started
+                  </button>
+                </a>
               </div>
             </div>
           </div>
@@ -212,6 +228,34 @@ function Home() {
               ))}
             </ul>
           </div>
+          {/* Blog Carousel Section */}
+          <div className="my-10">
+            <h2 className="text-2xl font-bold text-center mb-4">
+              Latest Blogs
+            </h2>
+            <div className="carousel w-full space-x-4 flex overflow-x-auto snap-x snap-mandatory scrollbar-hide">
+              {blogs.length > 0 ? (
+                blogs.map((blog, index) => (
+                  <div
+                    key={blog.bid}
+                    className="carousel-item snap-center w-80"
+                  >
+                    <MiniBlog
+                      blogLink={`/blog/${blog.bid}`}
+                      userProfileLink={`/user/${blog.aid}`}
+                      userName={blog.authorName || "Unknown"}
+                      text={blog.title}
+                      comments={blog.commentCount || 0}
+                    />
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-500 text-center w-full">
+                  No blogs available.
+                </p>
+              )}
+            </div>
+          </div>
           {/* faq section */}
           <div className="space-y-2 w-full my-2 mb-6">
             {faqs.map((faq, index) => (
@@ -242,14 +286,13 @@ function Home() {
                 track your journey.
               </p>
               <a
-               href="/login"
-              className="px-8 py-3 bg-white text-teal-600 rounded-lg text-lg hover:bg-gray-100"
-            >
-             Create Free Account
-</a>
+                href="/login"
+                className="px-8 py-3 bg-white text-teal-600 rounded-lg text-lg hover:bg-gray-100"
+              >
+                Create Free Account
+              </a>
             </div>
           </div>
-          
         </div>
       </div>
 

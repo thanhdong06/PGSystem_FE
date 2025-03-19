@@ -103,18 +103,18 @@ const Membership = () => {
         const redirectUrl = `${data.value.data.checkoutUrl}`;
         console.log("Redirecting to:", redirectUrl);
 
-        setToastMessage(`✅ Redirecting to payment for ${plan.name} plan...`);
+        setToastMessage(`Redirecting to payment for ${plan.name} plan...`);
         setShowToast(true);
         setTimeout(() => {
           setShowToast(false);
           window.location.href = redirectUrl;
-        }, 1500); // Show for 1.5 sec, then redirect
+        }, 1500); 
       } else {
         throw new Error("Payment initiation failed: No checkout URL returned.");
       }
     } catch (error) {
       console.error("Payment Error:", error);
-      setToastMessage(`❌ ${error.message || "An error occurred during payment."}`);
+      setToastMessage(`${error.message || "An error occurred during payment."}`);
       setShowToast(true);
       setTimeout(() => setShowToast(false), 3000);
     }
