@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
+import moment from "moment";
 import ChevronLeftIcon from "@heroicons/react/24/solid/ChevronLeftIcon";
 import ChevronRightIcon from "@heroicons/react/24/solid/ChevronRightIcon";
-import moment from "moment";
 import CALENDAR_EVENT_STYLE from "./Until";
 import Footer from "../../components/footer/Footer";
+import NewEventModal from "./NewEventModal";
+import DayDetailModal from "./DayDetailModal";
 
 const THEME_BG = CALENDAR_EVENT_STYLE;
 
-function CalendarView({ calendarEvents, addNewEvent, openDayDetail }) {
+function CalendarView({ calendarEvents }) {
   const today = moment().startOf("day");
   const weekdays = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
   const colStartClasses = [
@@ -20,15 +22,39 @@ function CalendarView({ calendarEvents, addNewEvent, openDayDetail }) {
     "col-start-7",
   ];
 
+  // State cho hiển thị calendar
   const [firstDayOfMonth, setFirstDayOfMonth] = useState(moment().startOf("month"));
   const [events, setEvents] = useState([]);
   const [currMonth, setCurrMonth] = useState(() => moment(today).format("MMM-yyyy"));
 
+  // State cho modal chi tiết ngày
+  const [dayDetailOpen, setDayDetailOpen] = useState(false);
+  const [selectedDayData, setSelectedDayData] = useState({ title: "", events: [] });
+
+  // State cho modal thêm sự kiện
+  const [newEventOpen, setNewEventOpen] = useState(false);
+  const [selectedDateForNewEvent, setSelectedDateForNewEvent] = useState(null);
+
+  // Khi component mount, load events từ localStorage (nếu có) hoặc từ props calendarEvents
   useEffect(() => {
-    setEvents(calendarEvents);
+    const storedEvents = localStorage.getItem("calendarEvents");
+    if (storedEvents) {
+      setEvents(JSON.parse(storedEvents));
+    } else if (Array.isArray(calendarEvents)) {
+      setEvents(calendarEvents);
+    } else if (calendarEvents?.events && Array.isArray(calendarEvents.events)) {
+      setEvents(calendarEvents.events);
+    } else {
+      setEvents([]);
+    }
   }, [calendarEvents]);
 
-  // Tạo danh sách các ngày hiển thị (bao gồm cả những ngày của tháng trước & sau để đủ lưới)
+  // Mỗi khi events thay đổi, lưu vào localStorage
+  useEffect(() => {
+    localStorage.setItem("calendarEvents", JSON.stringify(events));
+  }, [events]);
+
+  // Lấy tất cả các ngày cần hiển thị trong calendar (bao gồm các ngày dư của tháng trước/sau)
   const allDaysInMonth = () => {
     let start = moment(firstDayOfMonth).startOf("week");
     let end = moment(firstDayOfMonth).endOf("month").endOf("week");
@@ -41,7 +67,7 @@ function CalendarView({ calendarEvents, addNewEvent, openDayDetail }) {
     return days;
   };
 
-  // Lấy tối đa 2 event cho mỗi ngày
+  // Lấy tối đa 2 event cho mỗi ngày để hiển thị tóm tắt
   const getEventsForCurrentDate = (date) => {
     const eventList = events || [];
     let filteredEvents = eventList.filter((e) =>
@@ -55,21 +81,37 @@ function CalendarView({ calendarEvents, addNewEvent, openDayDetail }) {
     return filteredEvents;
   };
 
-  // Khi người dùng click vào "X more", mở chi tiết tất cả event
-  const openAllEventsDetail = (date, theme) => {
-    if (theme !== "MORE") return;
-    const filteredEvents = events
-      .filter((e) => moment(date).isSame(moment(e.startTime), "day"))
-      .map((e) => ({ title: e.title, theme: e.theme }));
-    openDayDetail({ filteredEvents, title: moment(date).format("D MMM YYYY") });
+  // Mở modal xem chi tiết các sự kiện trong một ngày
+  const openDayDetail = (date) => {
+    const filteredEvents = events.filter((e) =>
+      moment(date).isSame(moment(e.startTime), "day")
+    );
+    setSelectedDayData({
+      title: moment(date).format("D MMM YYYY"),
+      events: filteredEvents,
+    });
+    setDayDetailOpen(true);
   };
 
-  // Kiểm tra xem ngày hiện tại có phải ngày hôm nay không
+  // Hàm mở modal thêm sự kiện, truyền vào ngày (nếu có)
+  const handleAddNewEvent = (date) => {
+    setSelectedDateForNewEvent(date);
+    setNewEventOpen(true);
+  };
+
+  // Khi submit form thêm sự kiện, cập nhật state (và lưu vào localStorage qua useEffect)
+  const handleNewEventSubmit = (newEvent) => {
+    setEvents((prev) => [...prev, newEvent]);
+    setNewEventOpen(false);
+  };
+
+  // Kiểm tra xem ngày có phải hôm nay không
   const isToday = (date) => moment(date).isSame(moment(), "day");
+  // Kiểm tra xem ngày đó có thuộc tháng đang hiển thị không (để làm mờ các ngày ngoài tháng)
   const isDifferentMonth = (date) =>
     moment(date).month() !== moment(firstDayOfMonth).month();
 
-  // Điều hướng tháng
+  // Các hàm điều hướng tháng
   const getPrevMonth = () => {
     const firstDayOfPrevMonth = moment(firstDayOfMonth).subtract(1, "M").startOf("month");
     setFirstDayOfMonth(firstDayOfPrevMonth);
@@ -91,7 +133,7 @@ function CalendarView({ calendarEvents, addNewEvent, openDayDetail }) {
   return (
     <>
       <div className="w-full bg-white p-2 rounded-lg text-black shadow">
-        {/* Điều hướng header */}
+        {/* Header điều hướng tháng */}
         <div className="flex items-center justify-between">
           <div className="flex gap-2 sm:gap-4">
             <p className="font-semibold text-lg w-36">
@@ -100,10 +142,7 @@ function CalendarView({ calendarEvents, addNewEvent, openDayDetail }) {
             <button className="btn btn-square btn-xs btn-ghost" onClick={getPrevMonth}>
               <ChevronLeftIcon className="w-4 h-4 text-black" />
             </button>
-            <button
-              className="btn btn-xs btn-ghost normal-case whitespace-nowrap"
-              onClick={getCurrentMonth}
-            >
+            <button className="btn btn-xs btn-ghost normal-case whitespace-nowrap" onClick={getCurrentMonth}>
               Current Month
             </button>
             <button className="btn btn-square btn-xs btn-ghost" onClick={getNextMonth}>
@@ -111,9 +150,10 @@ function CalendarView({ calendarEvents, addNewEvent, openDayDetail }) {
             </button>
           </div>
           <div>
+            {/* Nút "Add New Event" khi không chọn ngày cụ thể */}
             <button
               className="btn btn-xs btn-ghost btn-outline normal-case"
-              onClick={() => addNewEvent()}
+              onClick={() => handleAddNewEvent(null)}
             >
               Add New Event
             </button>
@@ -131,7 +171,7 @@ function CalendarView({ calendarEvents, addNewEvent, openDayDetail }) {
           ))}
         </div>
 
-        {/* Các ô ngày (ô vuông nhỏ) */}
+        {/* Calendar Grid */}
         <div className="grid grid-cols-7 mt-1 place-items-stretch gap-2 sm:gap-4">
           {allDaysInMonth().map((day, idx) => (
             <div
@@ -145,29 +185,63 @@ function CalendarView({ calendarEvents, addNewEvent, openDayDetail }) {
                     ? "bg-blue-100 dark:bg-blue-400 dark:text-white"
                     : ""
                 } ${isDifferentMonth(day) ? "text-gray-400" : "text-black"}`}
-                onClick={() => addNewEvent(day)}
+                onClick={() => openDayDetail(day)}
               >
                 {moment(day).format("D")}
               </p>
 
-              {/* Các event của ngày */}
+              {/* Danh sách event tóm tắt (tối đa 2) */}
               <div className="mt-1 flex flex-col space-y-1">
-                {getEventsForCurrentDate(day).map((e, k) => (
-                  <p
-                    key={k}
-                    onClick={() => openAllEventsDetail(day, e.theme)}
-                    className={`text-xs truncate bg-white text-black cursor-pointer ${
-                      THEME_BG[e.theme] || ""
-                    }`}
-                  >
-                    {e.title}
-                  </p>
-                ))}
+                {getEventsForCurrentDate(day).map((e, k) => {
+                  // Danh sách màu dùng để highlight chữ theo thứ tự cố định
+                  const randomColors = [
+                    "text-red-500",
+                    "text-blue-500",
+                    "text-green-500",
+                    "text-yellow-500",
+                    "text-purple-500",
+                  ];
+                  const randomColor = randomColors[k % randomColors.length];
+
+                  return (
+                    <div
+                      key={k}
+                      onClick={() => (e.theme === "MORE" ? openDayDetail(day) : null)}
+                      className="flex justify-between items-center text-base bg-white text-black cursor-pointer p-1 rounded"
+                    >
+                      <span className={`font-bold truncate ${randomColor}`}>
+                        {e.title}
+                      </span>
+                      {e.startTime && (
+                        <span className="text-xs text-gray-600 ml-2">
+                          {new Date(e.startTime).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </span>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           ))}
         </div>
       </div>
+
+      <DayDetailModal
+        isOpen={dayDetailOpen}
+        dayData={selectedDayData}
+        onClose={() => setDayDetailOpen(false)}
+      />
+
+      <NewEventModal
+        isOpen={newEventOpen}
+        defaultDate={selectedDateForNewEvent}
+        onClose={() => setNewEventOpen(false)}
+        onSubmit={handleNewEventSubmit}
+      />
+
       <Footer />
     </>
   );

@@ -126,7 +126,7 @@ const Navbar = ({ toggleDrawer }) => {
               </details>
             </li>
             <li>
-              <a>Item 3</a>
+              <a>Member</a>
             </li>
           </ul>
         </div>

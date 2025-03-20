@@ -9,12 +9,14 @@ import Layout from "./components/layout/Layout";
 import Test from "./components/Test";
 import Blog from "./pages/blog/Blog";
 
-import ReminderList from "./pages/Reminder/CalendarView";
 import Profile from "./pages/Profile/Profile";
 import DueDateCalculation from "./pages/tools/duedatecalculation/DueDateCalculation";
 import OvulationCalculator from "./pages/tools/ovulationcalculation/OvulationCalculation";
 import PregnancyDiagnosis from "./pages/tools/pregnancydiagnosis/PegnancyDiagnosis";
 import BabyNamesFinder from "./pages/tools/babynamesfinder/BabyNamesFinder";
+
+import CalendarView from "./pages/Reminder/CalendarView";
+import FatalGrowthTracker from "./pages/Fetal Growth Tracker/FetalGrowthracker";
 
 
 function App() {
@@ -81,14 +83,17 @@ function App() {
     },
     {
       path: "/reminder",
-      element: <ReminderList/>,
+      element: <CalendarView/>,
     },
 
     {
       path:'/Profile',
       element:<Profile/>,
     },
-
+    {
+      path:'/FetalGrowthracker',
+      element:<FatalGrowthTracker/>,
+    },
  
 
 {
@@ -123,6 +128,10 @@ function App() {
         </Layout>
       ),
     },
+
+    
+
+
   ]);
   return <RouterProvider router={router} />;
 }
