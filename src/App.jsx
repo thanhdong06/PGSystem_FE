@@ -137,7 +137,7 @@ function App() {
       ),
     },
     //admin part
-    {
+    { 
       path: "/admin",
       element: <AdminLayout />, // New Admin Layout with Sidebar
       children: [
