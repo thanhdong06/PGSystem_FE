@@ -1,4 +1,4 @@
-  import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import ThemeSwitch from "../themeswitch/ThemeSwitch";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -28,7 +28,7 @@ const Navbar = ({ toggleDrawer }) => {
     localStorage.removeItem("refreshToken");
     setUser(null);
     setIsLoggedIn(false);
-    toast.success("Logged out successfully",{
+    toast.success("Logged out successfully", {
       autoClose: 700,
       style: {
         backgroundColor: "#28a745",
@@ -38,7 +38,6 @@ const Navbar = ({ toggleDrawer }) => {
       },
     });
   };
-  
 
   return (
     <div>
@@ -81,7 +80,7 @@ const Navbar = ({ toggleDrawer }) => {
                 </ul>
               </li>
               <li>
-                <a>Item 3</a>
+                <Link to="/member">Member</Link>
               </li>
             </ul>
           </div>
@@ -126,7 +125,7 @@ const Navbar = ({ toggleDrawer }) => {
               </details>
             </li>
             <li>
-              <a>Member</a>
+              <Link to="/member">Member</Link>
             </li>
           </ul>
         </div>
@@ -188,25 +187,24 @@ const Navbar = ({ toggleDrawer }) => {
               </div>
               <ul className="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow">
                 <li>
-                <Link to="/Profile"
-                  className="justify-between">Profile
+                  <Link to="/Profile" className="justify-between">
+                    Profile
                   </Link>
                 </li>
                 <li>
                   <a>Settings</a>
                 </li>
                 <li>
-  <a
-    href="#"
-    onClick={(e) => {
-      e.preventDefault();
-      handleLogOut();
-    }}
-  >
-    Logout
-  </a>
-</li>
-
+                  <a
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleLogOut();
+                    }}
+                  >
+                    Logout
+                  </a>
+                </li>
               </ul>
             </div>
           ) : (
