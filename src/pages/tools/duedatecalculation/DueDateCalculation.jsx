@@ -95,7 +95,7 @@ const DueDateCalculation = () => {
 
           {/* Explanation Section */}
           <div className="mt-8 p-6 bg-transparent rounded-lg shadow-md">
-            <h2 className="text-2xl font-bold text-primary mb-4">
+            <h2 className="text-2xl font-bold text-base-content mb-4">
               How is the due date calculated?
             </h2>
             <p className="text-base-content mb-4">
