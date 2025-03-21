@@ -9,8 +9,8 @@ import Layout from "./components/layout/Layout";
 import Test from "./components/Test";
 import Blog from "./pages/blog/Blog";
 
-import ReminderList from "./pages/Reminder/Reminder";
-import Profile from "./pages/Profile/Profile";
+// import ReminderList from "./pages/Reminder/Reminder";
+// import Profile from "./pages/Profile/Profile";
 import DueDateCalculation from "./pages/tools/duedatecalculation/DueDateCalculation";
 import OvulationCalculator from "./pages/tools/ovulationcalculation/OvulationCalculation";
 import PregnancyDiagnosis from "./pages/tools/pregnancydiagnosis/PegnancyDiagnosis";
@@ -94,15 +94,15 @@ function App() {
         </Layout>
       ),
     },
-    {
-      path: "/reminder",
-      element: <ReminderList />,
-    },
+    // {
+    //   path: "/reminder",
+    //   element: <ReminderList />,
+    // },
 
-    {
-      path: "/Profile",
-      element: <Profile />,
-    },
+    // {
+    //   path: "/Profile",
+    //   element: <Profile />,
+    // },
 
     {
       path: "/duedatecalculation",
