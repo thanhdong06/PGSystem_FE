@@ -2,12 +2,9 @@ import { useEffect, useState } from "react";
 import moment from "moment";
 import ChevronLeftIcon from "@heroicons/react/24/solid/ChevronLeftIcon";
 import ChevronRightIcon from "@heroicons/react/24/solid/ChevronRightIcon";
-import CALENDAR_EVENT_STYLE from "./Until";
 import Footer from "../../components/footer/Footer";
 import NewEventModal from "./NewEventModal";
 import DayDetailModal from "./DayDetailModal";
-
-const THEME_BG = CALENDAR_EVENT_STYLE;
 
 function CalendarView({ calendarEvents }) {
   const today = moment().startOf("day");
@@ -22,20 +19,16 @@ function CalendarView({ calendarEvents }) {
     "col-start-7",
   ];
 
-  // State cho hiển thị calendar
+  // State quản lý calendar và các modal
   const [firstDayOfMonth, setFirstDayOfMonth] = useState(moment().startOf("month"));
   const [events, setEvents] = useState([]);
   const [currMonth, setCurrMonth] = useState(() => moment(today).format("MMM-yyyy"));
-
-  // State cho modal chi tiết ngày
   const [dayDetailOpen, setDayDetailOpen] = useState(false);
   const [selectedDayData, setSelectedDayData] = useState({ title: "", events: [] });
-
-  // State cho modal thêm sự kiện
   const [newEventOpen, setNewEventOpen] = useState(false);
   const [selectedDateForNewEvent, setSelectedDateForNewEvent] = useState(null);
 
-  // Khi component mount, load events từ localStorage (nếu có) hoặc từ props calendarEvents
+  // Load events từ localStorage, props, hoặc từ API
   useEffect(() => {
     const storedEvents = localStorage.getItem("calendarEvents");
     if (storedEvents) {
@@ -49,12 +42,65 @@ function CalendarView({ calendarEvents }) {
     }
   }, [calendarEvents]);
 
-  // Mỗi khi events thay đổi, lưu vào localStorage
+  // Fetch events từ API
+  useEffect(() => {
+    async function fetchEvents() {
+      try {
+        const response = await fetch(
+          "https://pgsystem-g2ehcecxdkd5bjex.southeastasia-01.azurewebsites.net/api/Reminder/all",
+          { headers: { accept: "*/*" } }
+        );
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          setEvents(data);
+        } else if (data?.events && Array.isArray(data.events)) {
+          setEvents(data.events);
+        }
+      } catch (error) {
+        console.error("Error fetching events from API:", error);
+      }
+    }
+    fetchEvents();
+  }, []);
+
+  // Lưu events vào localStorage mỗi khi có thay đổi
   useEffect(() => {
     localStorage.setItem("calendarEvents", JSON.stringify(events));
   }, [events]);
 
-  // Lấy tất cả các ngày cần hiển thị trong calendar (bao gồm các ngày dư của tháng trước/sau)
+  // Hàm xóa event thông qua API (sử dụng rid)
+  const handleDeleteEvent = async (eventRid) => {
+    if (!eventRid) {
+      console.error("Event rid không hợp lệ:", eventRid);
+      return;
+    }
+    try {
+      const response = await fetch(
+        `https://pgsystem-g2ehcecxdkd5bjex.southeastasia-01.azurewebsites.net/api/Reminder?rid=${eventRid}`,
+        {
+          method: "DELETE",
+          headers: { accept: "text/plain" },
+        }
+      );
+      const result = await response.text();
+      console.log("Delete API response:", result);
+      if (response.ok) {
+        setEvents((prev) => prev.filter((event) => event.rid !== eventRid));
+      } else {
+        console.error("Không thể xóa event");
+      }
+    } catch (error) {
+      console.error("Lỗi khi xóa event:", error);
+    }
+  };
+
+  // Khi nhận event mới từ modal tạo, cập nhật lại state
+  const handleNewEventSubmit = (newEvent) => {
+    setEvents((prev) => [...prev, newEvent]);
+    setNewEventOpen(false);
+  };
+
+  // Lấy tất cả các ngày hiển thị trên calendar
   const allDaysInMonth = () => {
     let start = moment(firstDayOfMonth).startOf("week");
     let end = moment(firstDayOfMonth).endOf("month").endOf("week");
@@ -67,11 +113,11 @@ function CalendarView({ calendarEvents }) {
     return days;
   };
 
-  // Lấy tối đa 2 event cho mỗi ngày để hiển thị tóm tắt
+  // Lấy tối đa 2 event để hiển thị tóm tắt cho mỗi ngày (sử dụng dateTime)
   const getEventsForCurrentDate = (date) => {
     const eventList = events || [];
     let filteredEvents = eventList.filter((e) =>
-      moment(date).isSame(moment(e.startTime), "day")
+      moment(date).isSame(moment(e.dateTime), "day")
     );
     if (filteredEvents.length > 2) {
       const originalLength = filteredEvents.length;
@@ -81,10 +127,10 @@ function CalendarView({ calendarEvents }) {
     return filteredEvents;
   };
 
-  // Mở modal xem chi tiết các sự kiện trong một ngày
+  // Mở modal chi tiết của ngày và truyền các event của ngày đó
   const openDayDetail = (date) => {
     const filteredEvents = events.filter((e) =>
-      moment(date).isSame(moment(e.startTime), "day")
+      moment(date).isSame(moment(e.dateTime), "day")
     );
     setSelectedDayData({
       title: moment(date).format("D MMM YYYY"),
@@ -93,21 +139,15 @@ function CalendarView({ calendarEvents }) {
     setDayDetailOpen(true);
   };
 
-  // Hàm mở modal thêm sự kiện, truyền vào ngày (nếu có)
+  // Mở modal tạo event mới, truyền ngày mặc định nếu có
   const handleAddNewEvent = (date) => {
     setSelectedDateForNewEvent(date);
     setNewEventOpen(true);
   };
 
-  // Khi submit form thêm sự kiện, cập nhật state (và lưu vào localStorage qua useEffect)
-  const handleNewEventSubmit = (newEvent) => {
-    setEvents((prev) => [...prev, newEvent]);
-    setNewEventOpen(false);
-  };
-
   // Kiểm tra xem ngày có phải hôm nay không
   const isToday = (date) => moment(date).isSame(moment(), "day");
-  // Kiểm tra xem ngày đó có thuộc tháng đang hiển thị không (để làm mờ các ngày ngoài tháng)
+  // Kiểm tra xem ngày đó có thuộc tháng đang hiển thị hay không
   const isDifferentMonth = (date) =>
     moment(date).month() !== moment(firstDayOfMonth).month();
 
@@ -150,7 +190,6 @@ function CalendarView({ calendarEvents }) {
             </button>
           </div>
           <div>
-            {/* Nút "Add New Event" khi không chọn ngày cụ thể */}
             <button
               className="btn btn-xs btn-ghost btn-outline normal-case"
               onClick={() => handleAddNewEvent(null)}
@@ -171,14 +210,13 @@ function CalendarView({ calendarEvents }) {
           ))}
         </div>
 
-        {/* Calendar Grid */}
+        {/* Lưới calendar */}
         <div className="grid grid-cols-7 mt-1 place-items-stretch gap-2 sm:gap-4">
           {allDaysInMonth().map((day, idx) => (
             <div
               key={idx}
               className={`${colStartClasses[moment(day).get("day")]} border border-solid w-45 aspect-square flex flex-col p-1 relative`}
             >
-              {/* Số ngày */}
               <p
                 className={`inline-block self-start text-xs cursor-pointer px-1 rounded-full hover:bg-gray-200 ${
                   isToday(day)
@@ -189,32 +227,28 @@ function CalendarView({ calendarEvents }) {
               >
                 {moment(day).format("D")}
               </p>
-
-              {/* Danh sách event tóm tắt (tối đa 2) */}
               <div className="mt-1 flex flex-col space-y-1">
                 {getEventsForCurrentDate(day).map((e, k) => {
-                  // Danh sách màu dùng để highlight chữ theo thứ tự cố định
-                  const randomColors = [
+                  const colors = [
                     "text-red-500",
                     "text-blue-500",
                     "text-green-500",
                     "text-yellow-500",
                     "text-purple-500",
                   ];
-                  const randomColor = randomColors[k % randomColors.length];
-
+                  const color = colors[k % colors.length];
                   return (
                     <div
                       key={k}
-                      onClick={() => (e.theme === "MORE" ? openDayDetail(day) : null)}
+                      onClick={() => e.theme === "MORE" && openDayDetail(day)}
                       className="flex justify-between items-center text-base bg-white text-black cursor-pointer p-1 rounded"
                     >
-                      <span className={`font-bold truncate ${randomColor}`}>
+                      <span className={`font-bold truncate ${color}`}>
                         {e.title}
                       </span>
-                      {e.startTime && (
+                      {e.dateTime && (
                         <span className="text-xs text-gray-600 ml-2">
-                          {new Date(e.startTime).toLocaleTimeString([], {
+                          {new Date(e.dateTime).toLocaleTimeString([], {
                             hour: "2-digit",
                             minute: "2-digit",
                           })}
@@ -229,12 +263,15 @@ function CalendarView({ calendarEvents }) {
         </div>
       </div>
 
+      {/* Modal chi tiết ngày với nút xóa event */}
       <DayDetailModal
         isOpen={dayDetailOpen}
         dayData={selectedDayData}
         onClose={() => setDayDetailOpen(false)}
+        onDeleteEvent={handleDeleteEvent}
       />
 
+      {/* Modal tạo event mới */}
       <NewEventModal
         isOpen={newEventOpen}
         defaultDate={selectedDateForNewEvent}

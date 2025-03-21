@@ -3,15 +3,15 @@ import Footer from '../../components/footer/Footer';
 
 const EnhancedFetalGrowthTracker = () => {
   // Sample data including daily entries
-  const [growthData, setGrowthData] = useState([
-    { day: 84, week: 12, weight: 14, height: 5.4, date: '2025-01-10' },
-    { day: 98, week: 14, weight: 43, height: 8.7, date: '2025-01-24' },
-    { day: 112, week: 16, weight: 100, height: 14.0, date: '2025-02-07' },
-    { day: 126, week: 18, weight: 190, height: 18.5, date: '2025-02-21' },
-    { day: 140, week: 20, weight: 300, height: 25.0, date: '2025-03-07' },
-    { day: 154, week: 22, weight: 430, height: 27.8, date: '2025-03-21' },
-    { day: 168, week: 24, weight: 600, height: 30.0, date: '2025-04-04' }
-  ]);
+  // const [growthData, setGrowthData] = useState([
+  //   { day: 84, week: 12, weight: 14, height: 5.4, date: '2025-01-10' },
+  //   { day: 98, week: 14, weight: 43, height: 8.7, date: '2025-01-24' },
+  //   { day: 112, week: 16, weight: 100, height: 14.0, date: '2025-02-07' },
+  //   { day: 126, week: 18, weight: 190, height: 18.5, date: '2025-02-21' },
+  //   { day: 140, week: 20, weight: 300, height: 25.0, date: '2025-03-07' },
+  //   { day: 154, week: 22, weight: 430, height: 27.8, date: '2025-03-21' },
+  //   { day: 168, week: 24, weight: 600, height: 30.0, date: '2025-04-04' }
+  // ]);
   
   const [newEntry, setNewEntry] = useState({
     day: '',
