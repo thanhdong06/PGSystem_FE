@@ -17,7 +17,7 @@ const Navbar = ({ toggleDrawer }) => {
       setIsLoggedIn(true);
     }
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      setUser(JSON.parse(storedUser)); // Parse the user object, including role
     }
   }, []);
 
@@ -79,9 +79,12 @@ const Navbar = ({ toggleDrawer }) => {
                   </li>
                 </ul>
               </li>
-              <li>
-                <Link to="/member">Member</Link>
-              </li>
+              {/* Sửa thành toLowerCase() để tránh lỗi phân biệt hoa/thường */}
+              {isLoggedIn && user && user.role?.toLowerCase() === "member" && (
+                <li>
+                  <Link to="/member">Member</Link>
+                </li>
+              )}
             </ul>
           </div>
           <a className="btn btn-ghost text-xl" onClick={toggleDrawer}>
@@ -124,9 +127,12 @@ const Navbar = ({ toggleDrawer }) => {
                 </ul>
               </details>
             </li>
-            <li>
-              <Link to="/member">Member</Link>
-            </li>
+            {/* Sửa thành toLowerCase() để tránh lỗi phân biệt hoa/thường */}
+            {isLoggedIn && user && user.role?.toLowerCase() === "member" && (
+              <li>
+                <Link to="/member">Member</Link>
+              </li>
+            )}
           </ul>
         </div>
 

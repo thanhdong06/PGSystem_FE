@@ -15,7 +15,7 @@ function CalendarView({ calendarEvents }) {
     "col-start-3",
     "col-start-4",
     "col-start-5",
-    "col-start-6",
+    "col-start-6",  
     "col-start-7",
   ];
 

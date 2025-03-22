@@ -52,8 +52,9 @@ const BlogPost = ({ bid }) => {
           </div>
         </Link>
         <div className="flex flex-col">
+          {/* Display the full name extracted from the API */}
           <Link to="#" className="text-lg font-semibold text-base-content hover:underline">
-            Admin
+            {blog.user.fullName}
           </Link>
           <span className="text-sm text-gray-500">
             {new Date(blog.createAt).toLocaleDateString()}

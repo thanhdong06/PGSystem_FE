@@ -1,8 +1,8 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../../components/footer/Footer";
 import "react-toastify/dist/ReactToastify.css";
-
 
 const Login = () => {
   const [rightPanelActive, setRightPanelActive] = useState(true);
@@ -10,6 +10,7 @@ const Login = () => {
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   // Handle Sign In
   const handleSignInSubmit = async (e) => {
@@ -56,11 +57,16 @@ const Login = () => {
         localStorage.setItem("token", token);
         localStorage.setItem("refreshToken", refreshToken);
         localStorage.setItem("user", JSON.stringify(user));
-
         console.log("Saved token from localStorage:", localStorage.getItem("token"));
 
-        // Redirect to home page
-        window.location.href = "/";
+        // Sử dụng setTimeout để đợi thông báo hiển thị rồi chuyển hướng
+        setTimeout(() => {
+          if (user.role === "Admin") {
+            navigate("/admin");
+          } else {
+            navigate("/home");
+          }
+        }, 1000); // Chờ 2 giây
       } else {
         throw new Error(data.value?.message || "Invalid email or password");
       }
@@ -82,7 +88,7 @@ const Login = () => {
     }
   };
 
-  // Handle Sign Up
+  // Handle Sign Up (unchanged)
   const handleSignUpSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -119,7 +125,6 @@ const Login = () => {
         },
       });
 
-      // Reset input fields and switch to the Login panel after successful registration
       setEmail("");
       setFullName("");
       setPhone("");

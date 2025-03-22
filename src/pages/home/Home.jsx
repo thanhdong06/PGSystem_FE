@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import Footer from "../../components/footer/Footer";
 import { Link } from "react-router-dom";
-import MiniBlog from "../blog/components/Miniblog";
+import MiniBlog from "../blog/components/MiniBlog";
+
 const BLOG_API =
   "https://pgsystem-g2ehcecxdkd5bjex.southeastasia-01.azurewebsites.net/api/Blog/all";
+
 const AutoCarousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -11,7 +13,6 @@ const AutoCarousel = () => {
     "https://www.shutterstock.com/image-photo/kindergarten-children-playing-different-musical-600nw-1284017200.jpg",
     "https://static.vecteezy.com/system/resources/thumbnails/049/218/180/small_2x/best-selling-natural-and-organic-baby-care-products-photo.jpeg",
     "https://pediatrixmd.com/wp-content/uploads/2022/11/tips-for-taking-care-of-a-newborn-baby-feat.jpg",
-    // "https://img.daisyui.com/images/stock/photo-1665553365602-b2fb8e5d1707.webp",
   ];
 
   useEffect(() => {
@@ -78,8 +79,7 @@ const pregnancyTimeline = [
   },
   {
     stage: "Second Trimester (Weeks 13-26)",
-    description:
-      "The baby starts moving, and the mother may begin to feel kicks.",
+    description: "The baby starts moving, and the mother may begin to feel kicks.",
   },
   {
     stage: "Third Trimester (Weeks 27-40)",
@@ -102,9 +102,17 @@ function Home() {
         const response = await fetch(BLOG_API);
         if (!response.ok) throw new Error("Failed to fetch blogs.");
         let data = await response.json();
+
+        // Sắp xếp theo thời gian tạo và lấy 10 blog mới nhất
         data = data
           .sort((a, b) => new Date(b.createAt) - new Date(a.createAt))
-          .slice(0, 10); // Take only the latest 10 blogs
+          .slice(0, 10)
+          // Gán trường authorName từ user.fullName (nếu có)
+          .map((blog) => ({
+            ...blog,
+            authorName: blog.user?.fullName || "Unknown",
+          }));
+
         setBlogs(data);
       } catch (error) {
         console.error(error.message);
@@ -112,10 +120,11 @@ function Home() {
     };
     fetchBlogs();
   }, []);
+
   return (
     <div>
       <div className="flex justify-center w-full min-h-screen">
-        <div className="justify justify-center items-center w-4/5 min-h-screen drop-shadow-sm">
+        <div className="justify-center items-center w-4/5 min-h-screen drop-shadow-sm">
           {/* Header Section */}
           <div className="flex flex-row gap-10 px-10 py-10 bg-[#adecda] h-[100px]">
             <div className="basis-5/6 self-center text-left pl-20 font-bold text-2xl text-black">
@@ -128,6 +137,7 @@ function Home() {
             <img
               src="https://assets.babycenter.com/ims/2023/11/BabyCenter-Trust_Wave-Desktop.svg"
               className="absolute top-0 left-1/2 transform -translate-x-1/2 z-10 w-full h-auto"
+              alt="Banner"
             />
 
             {/* Auto Carousel (Background) */}
@@ -145,8 +155,8 @@ function Home() {
               <div className="text-white max-w-md">
                 <h2 className="text-2xl font-bold mb-4">Track Your Journey</h2>
                 <p className="mb-6">
-                  Monitor your pregnancy progress, get personalized insights,
-                  and connect with healthcare providers.
+                  Monitor your pregnancy progress, get personalized insights, and
+                  connect with healthcare providers.
                 </p>
                 <a href="/membership">
                   <button className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
@@ -163,8 +173,8 @@ function Home() {
               <div className="text-blue-500 mb-4">
                 <h3 className="text-xl font-bold mb-2">Baby Development</h3>
                 <p className="text-base-content">
-                  Track your baby's growth week by week with detailed insights
-                  and milestones.
+                  Track your baby's growth week by week with detailed insights and
+                  milestones.
                 </p>
               </div>
             </div>
@@ -173,8 +183,8 @@ function Home() {
               <div className="text-teal-500 mb-4">
                 <h3 className="text-xl font-bold mb-2">Health Monitoring</h3>
                 <p className="text-base-content">
-                  Log your vital signs, symptoms, and health metrics throughout
-                  your pregnancy.
+                  Log your vital signs, symptoms, and health metrics throughout your
+                  pregnancy.
                 </p>
               </div>
             </div>
@@ -183,14 +193,13 @@ function Home() {
               <div className="text-purple-500 mb-4">
                 <h3 className="text-xl font-bold mb-2">Appointment Tracker</h3>
                 <p className="text-base-content">
-                  Never miss an important checkup with our appointment
-                  management system.
+                  Never miss an important checkup with our appointment management system.
                 </p>
               </div>
             </div>
           </div>
 
-          {/* preg timeline section */}
+          {/* Pregnance Timeline Section */}
           <div className="flex flex-col">
             <div className="flex justify-between">
               <div className="text-base-content font-bold text-xl">
@@ -228,35 +237,30 @@ function Home() {
               ))}
             </ul>
           </div>
+
           {/* Blog Carousel Section */}
           <div className="my-10">
-            <h2 className="text-2xl font-bold text-center mb-4">
-              Latest Blogs
-            </h2>
+            <h2 className="text-2xl font-bold text-center mb-4">Latest Blogs</h2>
             <div className="carousel w-full space-x-4 flex overflow-x-auto snap-x snap-mandatory scrollbar-hide">
               {blogs.length > 0 ? (
-                blogs.map((blog, index) => (
-                  <div
-                    key={blog.bid}
-                    className="carousel-item snap-center w-80"
-                  >
+                blogs.map((blog) => (
+                  <div key={blog.bid} className="carousel-item snap-center w-80">
                     <MiniBlog
                       blogLink={`/blog/${blog.bid}`}
                       userProfileLink={`/user/${blog.aid}`}
-                      userName={blog.authorName || "Unknown"}
+                      userName={blog.authorName}  // Đã được gán từ blog.user.fullName
                       text={blog.title}
                       comments={blog.commentCount || 0}
                     />
                   </div>
                 ))
               ) : (
-                <p className="text-gray-500 text-center w-full">
-                  No blogs available.
-                </p>
+                <p className="text-gray-500 text-center w-full">No blogs available.</p>
               )}
             </div>
           </div>
-          {/* faq section */}
+
+          {/* FAQ Section */}
           <div className="space-y-2 w-full my-2 mb-6">
             {faqs.map((faq, index) => (
               <div
@@ -268,22 +272,18 @@ function Home() {
                   name="faq-accordion"
                   defaultChecked={index === 0}
                 />
-                <div className="collapse-title font-semibold">
-                  {faq.question}
-                </div>
+                <div className="collapse-title font-semibold">{faq.question}</div>
                 <div className="collapse-content text-sm">{faq.answer}</div>
               </div>
             ))}
           </div>
+
           {/* Community Section */}
           <div className="bg-teal-600 text-white py-16">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-              <h2 className="text-3xl font-bold mb-4">
-                Join Our Community Today
-              </h2>
+              <h2 className="text-3xl font-bold mb-4">Join Our Community Today</h2>
               <p className="text-xl mb-8">
-                Get personalized pregnancy insights, join discussion groups, and
-                track your journey.
+                Get personalized pregnancy insights, join discussion groups, and track your journey.
               </p>
               <a
                 href="/login"

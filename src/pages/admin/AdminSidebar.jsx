@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import ThemeSwitch from "../../components/themeswitch/ThemeSwitch";
 import {
   Squares2X2Icon,
@@ -9,6 +9,7 @@ import {
   HomeIcon,
   ArrowLeftOnRectangleIcon,
 } from "@heroicons/react/24/outline";
+import { toast } from "react-toastify";
 
 const iconClasses = `h-6 w-6`;
 
@@ -38,6 +39,28 @@ const routes = [
 const AdminSidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogOut = () => {
+    // Clear authentication data from local storage
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("refreshToken");
+
+    // Display success toast message (matching Navbar styling)
+    toast.success("Logged out successfully", {
+      autoClose: 700,
+      style: {
+        backgroundColor: "#28a745",
+        color: "white",
+        fontWeight: "bold",
+        borderRadius: "8px",
+      },
+    });
+
+    // Redirect to login page
+    navigate("/login");
+  };
 
   return (
     <div
@@ -63,14 +86,7 @@ const AdminSidebar = () => {
           </button>
         </div>
 
-        {/* 🔹 Back to Home Button (Always Visible) */}
-        <Link
-          to="/"
-          className="flex items-center gap-3 p-3 rounded-lg bg-gray-800 hover:bg-gray-700 transition-all mb-4"
-        >
-          <HomeIcon className={iconClasses} />
-          {isOpen && <span>Back to Home</span>}
-        </Link>
+       
 
         {/* Sidebar Links */}
         <ul className="space-y-3">
@@ -97,7 +113,10 @@ const AdminSidebar = () => {
         <div className="flex items-center justify-center h-[50px] bg-gray-800 rounded-lg mb-4 w-full">
           <ThemeSwitch />
         </div>
-        <button className="flex items-center gap-3 p-3 bg-red-500 hover:bg-red-700 rounded-lg w-full">
+        <button
+          onClick={handleLogOut}
+          className="flex items-center gap-3 p-3 bg-red-500 hover:bg-red-700 rounded-lg w-full"
+        >
           <ArrowLeftOnRectangleIcon className={iconClasses} />
           {isOpen && <span>Logout</span>}
         </button>

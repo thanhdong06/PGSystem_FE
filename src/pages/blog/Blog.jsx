@@ -5,56 +5,44 @@ import CommentList from "./components/CommentList";
 import Footer from "../../components/Footer/Footer";
 import BlogList from "./components/BlogList";
 
-const API_URL =
-  "https://pgsystem-g2ehcecxdkd5bjex.southeastasia-01.azurewebsites.net/api/Blog/all";
-const CREATE_BLOG_URL =
-  "https://pgsystem-g2ehcecxdkd5bjex.southeastasia-01.azurewebsites.net/api/Blog/Create";
-const COMMENT_API =
-  "https://pgsystem-g2ehcecxdkd5bjex.southeastasia-01.azurewebsites.net/api/Comment/by-bid";
+const API_URL = "https://pgsystem-g2ehcecxdkd5bjex.southeastasia-01.azurewebsites.net/api/Blog/all";
+const CREATE_BLOG_URL = "https://pgsystem-g2ehcecxdkd5bjex.southeastasia-01.azurewebsites.net/api/Blog";
+const COMMENT_API = "https://pgsystem-g2ehcecxdkd5bjex.southeastasia-01.azurewebsites.net/api/Comment/by-bid";
 
 const Blog = () => {
   const { bid } = useParams();
+  const navigate = useNavigate();
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const navigate = useNavigate();
-  const [newBlog, setNewBlog] = useState({
-    title: "",
-    content: "",
-    type: "",
-    aid: 0,
-  });
+  const [newBlog, setNewBlog] = useState({ title: "", content: "", type: "", aid: 0 });
 
   useEffect(() => {
-    if (!bid) {
-      fetchBlogs();
-    }
-  }, [bid]);
+    fetchBlogs();
+  }, []);
 
   const fetchBlogs = async () => {
     try {
       const response = await fetch(API_URL);
-      if (!response.ok) {
-        throw new Error("Failed to fetch blogs.");
-      }
+      if (!response.ok) throw new Error("Failed to fetch blogs.");
+
       let data = await response.json();
 
-      // Sort blogs by latest first
+      // Sort by latest date
       data = data.sort((a, b) => new Date(b.createAt) - new Date(a.createAt));
 
-      // Fetch comment counts for each blog
+      // Fetch comment count for each blog
       const blogsWithComments = await Promise.all(
         data.map(async (blog) => {
           try {
             const commentResponse = await fetch(`${COMMENT_API}/${blog.bid}`);
-            if (!commentResponse.ok) {
-              return { ...blog, commentCount: 0 }; // No comments
-            }
+            if (!commentResponse.ok) return { ...blog, commentCount: 0 };
+
             const comments = await commentResponse.json();
             return { ...blog, commentCount: comments.length };
-          } catch (error) {
-            return { ...blog, commentCount: 0 }; // Error handling
+          } catch {
+            return { ...blog, commentCount: 0 };
           }
         })
       );
@@ -70,9 +58,10 @@ const Blog = () => {
   const handleCreateBlog = async (e) => {
     e.preventDefault();
     const user = JSON.parse(localStorage.getItem("user"));
+    const token = localStorage.getItem("token");
 
-    if (!user) {
-      alert("Please log in to create a blog.");
+    if (!user || user.role !== "Member") {
+      alert("Bạn không có quyền tạo blog. Vui lòng đăng nhập với tài khoản member.");
       return;
     }
 
@@ -81,7 +70,10 @@ const Blog = () => {
     try {
       const response = await fetch(CREATE_BLOG_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify(blogData),
       });
 
@@ -90,7 +82,7 @@ const Blog = () => {
       alert("Blog created successfully!");
       setIsModalOpen(false);
       setNewBlog({ title: "", content: "", type: "", aid: user.uid });
-      fetchBlogs(); // Refresh list
+      fetchBlogs();
     } catch (error) {
       alert(error.message || "Error creating blog.");
     }
@@ -101,11 +93,8 @@ const Blog = () => {
       {bid ? (
         <div className="grid grid-cols-7 py-2 max-w-screen min-h-screen my-4">
           <div className="col-start-2 col-span-3">
-            {/* Back Button */}
             <div className="flex justify-between items-center mb-4">
-              <button onClick={() => navigate("/blog")} className="btn ">
-                ⬅ Back to Blog Home
-              </button>
+              <button onClick={() => navigate("/blog")} className="btn">⬅ Back to Blog Home</button>
             </div>
             <div className="text-sm underline font-bold mb-4">Catalog</div>
             <div className="mb-6">
@@ -114,10 +103,8 @@ const Blog = () => {
             <CommentList bid={bid} />
           </div>
           <div className="col-start-6 col-end-8 hidden xl:block">
-            <div className="bg-base-100 rounded-lg p-4 ">
-              <h3 className="text-lg font-bold text-gray-800 mb-4">
-                📰 Recent Blogs
-              </h3>
+            <div className="bg-base-100 rounded-lg p-4">
+              <h3 className="text-lg font-bold text-gray-800 mb-4">📰 Recent Blogs</h3>
               <BlogList />
             </div>
           </div>
@@ -127,14 +114,8 @@ const Blog = () => {
           <div className="col-start-2 col-span-5">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold">Recent Blog Posts</h2>
-              <button
-                onClick={() => setIsModalOpen(true)}
-                className="btn btn-primary"
-              >
-                Create Blog
-              </button>
+              <button onClick={() => setIsModalOpen(true)} className="btn btn-primary">Create Blog</button>
             </div>
-
             {loading ? (
               <p className="text-gray-500">Loading...</p>
             ) : error ? (
@@ -142,15 +123,9 @@ const Blog = () => {
             ) : (
               <div className="space-y-6 mb-4">
                 {blogs.map((blog) => (
-                  <div
-                    key={blog.bid}
-                    className="card w-full bg-base-100 border-2 border-base-300 p-4"
-                  >
+                  <div key={blog.bid} className="card w-full bg-base-100 border-2 border-base-300 p-4">
                     <h3 className="text-lg font-semibold">
-                      <Link
-                        to={`/blog/${blog.bid}`}
-                        className="text-primary font-semibold hover:underline"
-                      >
+                      <Link to={`/blog/${blog.bid}`} className="text-primary font-semibold hover:underline">
                         {blog.title}
                       </Link>
                     </h3>
@@ -158,9 +133,7 @@ const Blog = () => {
                       {blog.content.slice(0, 500)}...
                     </p>
                     <div className="flex items-center gap-4 text-base-content text-sm mt-2">
-                      <span>
-                        📅 {new Date(blog.createAt).toLocaleDateString()}
-                      </span>
+                      <span>📅 {new Date(blog.createAt).toLocaleDateString()}</span>
                       <span>👤 {blog.authorName || "Unknown"}</span>
                       <span>💬 {blog.commentCount} Comments</span>
                     </div>
@@ -178,42 +151,14 @@ const Blog = () => {
           <div className="modal-box">
             <h3 className="font-bold text-lg">Create New Blog</h3>
             <form onSubmit={handleCreateBlog}>
-              <label className="label">
-                <span className="label-text">Title</span>
-              </label>
-              <input
-                type="text"
-                value={newBlog.title}
-                onChange={(e) =>
-                  setNewBlog({ ...newBlog, title: e.target.value })
-                }
-                className="input input-bordered w-full"
-                required
-              />
+              <label className="label">Title</label>
+              <input type="text" value={newBlog.title} onChange={(e) => setNewBlog({ ...newBlog, title: e.target.value })} className="input input-bordered w-full" required />
 
-              <label className="label mt-2">
-                <span className="label-text">Content</span>
-              </label>
-              <textarea
-                value={newBlog.content}
-                onChange={(e) =>
-                  setNewBlog({ ...newBlog, content: e.target.value })
-                }
-                className="textarea textarea-bordered w-full"
-                required
-              ></textarea>
+              <label className="label mt-2">Content</label>
+              <textarea value={newBlog.content} onChange={(e) => setNewBlog({ ...newBlog, content: e.target.value })} className="textarea textarea-bordered w-full" required></textarea>
 
-              <label className="label mt-2">
-                <span className="label-text">Category</span>
-              </label>
-              <select
-                value={newBlog.type}
-                onChange={(e) =>
-                  setNewBlog({ ...newBlog, type: e.target.value })
-                }
-                className="select select-bordered w-full"
-                required
-              >
+              <label className="label mt-2">Category</label>
+              <select value={newBlog.type} onChange={(e) => setNewBlog({ ...newBlog, type: e.target.value })} className="select select-bordered w-full" required>
                 <option value="">Select Category</option>
                 <option value="pregnancy">Pregnancy</option>
                 <option value="health">Health</option>
@@ -221,16 +166,8 @@ const Blog = () => {
               </select>
 
               <div className="modal-action">
-                <button
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="btn btn-secondary"
-                >
-                  Cancel
-                </button>
-                <button type="submit" className="btn btn-primary">
-                  Create
-                </button>
+                <button type="button" onClick={() => setIsModalOpen(false)} className="btn btn-secondary">Cancel</button>
+                <button type="submit" className="btn btn-primary">Create</button>
               </div>
             </form>
           </div>

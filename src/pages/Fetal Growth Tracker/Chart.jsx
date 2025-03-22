@@ -261,7 +261,143 @@ const Chart = ({ growthData, weeklyData, viewMode, setViewMode, activeMetric, se
             </g>
           ))}
         </svg>
+        
       </div>
+      <ul className="space-y-4">
+              <li className="border-l-4 border-primary pl-4">
+                <h3 className="text-lg font-semibold text-base-content">
+                  📅 Missed Period
+                </h3>
+                <p className="text-base-content">
+                  If your period is late and you’ve had unprotected intercourse,
+                  pregnancy is a possibility. A missed period is one of the most{" "}
+                  <strong>reliable early signs</strong>. However, stress, weight
+                  changes, or hormonal imbalances can also cause delays. If your
+                  period is more than a week late, consider taking a pregnancy
+                  test.
+                </p>
+              </li>
+
+              <li className="border-l-4 border-primary pl-4">
+                <h3 className="text-lg font-semibold text-base-content">
+                  🤢 Nausea & Morning Sickness
+                </h3>
+                <p className="text-base-content">
+                  Many women start experiencing nausea{" "}
+                  <strong>as early as 2-3 weeks after conception</strong>. It’s
+                  commonly known as <strong>morning sickness</strong>, but it
+                  can occur at any time of the day. While some women have mild
+                  nausea, others may vomit frequently. Eating small meals and
+                  staying hydrated can help manage this symptom.
+                </p>
+              </li>
+
+              <li className="border-l-4 border-primary pl-4">
+                <h3 className="text-lg font-semibold text-base-content">
+                  ⚡ Fatigue & Mood Swings
+                </h3>
+                <p className="text-base-content">
+                  A sudden increase in <strong>progesterone levels</strong> can
+                  make you feel <strong>exhausted</strong>. If you're sleeping
+                  more than usual or feeling drained throughout the day, it
+                  might be an early pregnancy symptom. Mood swings are also
+                  common due to <strong>hormonal fluctuations</strong>, making
+                  you feel more emotional than usual.
+                </p>
+              </li>
+
+              <li className="border-l-4 border-primary pl-4">
+                <h3 className="text-lg font-semibold text-base-content">
+                  🏥 Tender or Swollen Breasts
+                </h3>
+                <p className="text-base-content">
+                  Hormonal changes can cause your breasts to feel{" "}
+                  <strong>sore, heavy, or swollen</strong>. Some women notice
+                  their nipples becoming
+                  <strong>darker and more sensitive</strong> in early pregnancy.
+                  This symptom is similar to what happens before your period but
+                  often lasts longer.
+                </p>
+              </li>
+
+              <li className="border-l-4 border-primary pl-4">
+                <h3 className="text-lg font-semibold text-base-content">
+                  🚽 Frequent Urination
+                </h3>
+                <p className="text-base-content">
+                  If you're finding yourself{" "}
+                  <strong>running to the bathroom more often</strong>, it might
+                  be due to pregnancy. The body increases blood flow to the
+                  kidneys, leading to more frequent urination. This symptom
+                  usually starts around <strong>6-8 weeks of pregnancy</strong>.
+                </p>
+              </li>
+
+              <li className="border-l-4 border-primary pl-4">
+                <h3 className="text-lg font-semibold text-base-content">
+                  🍫 Food Cravings or Aversions
+                </h3>
+                <p className="text-base-content">
+                  If you suddenly can’t stand certain foods or find yourself
+                  craving unusual things, it could be a sign of pregnancy. Many
+                  women develop
+                  <strong>strong food aversions</strong> to smells or flavors
+                  they previously enjoyed.
+                </p>
+              </li>
+
+              <li className="border-l-4 border-primary pl-4">
+                <h3 className="text-lg font-semibold text-base-content">
+                  🩸 Light Spotting (Implantation Bleeding)
+                </h3>
+                <p className="text-base-content">
+                  Some women notice <strong>light spotting</strong> around{" "}
+                  <strong>6-12 days after conception</strong>. This is called
+                  <strong>implantation bleeding</strong>, and it occurs when the
+                  fertilized egg attaches to the uterus. It’s much lighter than
+                  a regular period and usually stops within a day or two.
+                </p>
+              </li>
+
+              <li className="border-l-4 border-primary pl-4">
+                <h3 className="text-lg font-semibold text-base-content">
+                  🌀 Dizziness & Headaches
+                </h3>
+                <p className="text-base-content">
+                  Pregnancy can cause a <strong>drop in blood pressure</strong>,
+                  leading to dizziness or lightheadedness. Hormonal changes may
+                  also trigger
+                  <strong>frequent headaches</strong>, especially in the early
+                  weeks.
+                </p>
+              </li>
+
+              <li className="border-l-4 border-primary pl-4">
+                <h3 className="text-lg font-semibold text-base-content">
+                  🌡️ Increased Basal Body Temperature
+                </h3>
+                <p className="text-base-content">
+                  If you’ve been tracking your{" "}
+                  <strong>basal body temperature (BBT)</strong>, you may notice
+                  it remains <strong>higher than normal</strong> for more than
+                  two weeks after ovulation. A consistently elevated BBT can be
+                  an early sign of pregnancy.
+                </p>
+              </li>
+
+              <li className="border-l-4 border-primary pl-4">
+                <h3 className="text-lg font-semibold text-base-content">
+                  🥄 Metallic Taste (Dysgeusia)
+                </h3>
+                <p className="text-base-content">
+                  Some pregnant women report a{" "}
+                  <strong>strange metallic taste</strong>
+                  in their mouth, even when they’re not eating anything. This is
+                  caused by hormonal changes and can make some foods taste
+                  different than usual.
+                </p>
+              </li>
+            </ul>
     </div>
   );
 };
