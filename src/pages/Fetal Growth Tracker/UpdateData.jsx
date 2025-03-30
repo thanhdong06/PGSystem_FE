@@ -1,4 +1,3 @@
-// UpdateData.jsx
 import React, { useState } from 'react';
 
 const UpdateData = ({ growthData, setGrowthData, setActiveTab }) => {
@@ -6,8 +5,7 @@ const UpdateData = ({ growthData, setGrowthData, setActiveTab }) => {
     day: '',
     week: '',
     weight: '',
-    height: '',
-    date: ''
+    height: ''
   });
   const [error, setError] = useState('');
 
@@ -39,7 +37,7 @@ const UpdateData = ({ growthData, setGrowthData, setActiveTab }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!newEntry.day || !newEntry.week || !newEntry.weight || !newEntry.height || !newEntry.date) {
+    if (!newEntry.day || !newEntry.week || !newEntry.weight || !newEntry.height) {
       setError('Please fill in all fields');
       return;
     }
@@ -57,7 +55,8 @@ const UpdateData = ({ growthData, setGrowthData, setActiveTab }) => {
       return;
     }
 
-    // Kiểm tra nếu ngày đã tồn tại
+    const today = new Date().toISOString().split('T')[0]; // Tự động lấy ngày hôm nay (YYYY-MM-DD)
+
     const existingIndex = growthData.findIndex(item => item.day === dayNum);
     let updatedData;
     if (existingIndex >= 0) {
@@ -67,7 +66,7 @@ const UpdateData = ({ growthData, setGrowthData, setActiveTab }) => {
               ...item,
               weight: parseFloat(newEntry.weight),
               height: parseFloat(newEntry.height),
-              date: newEntry.date
+              date: today // Cập nhật ngày khi có thay đổi
             }
           : item
       );
@@ -79,13 +78,13 @@ const UpdateData = ({ growthData, setGrowthData, setActiveTab }) => {
           week: weekNum,
           weight: parseFloat(newEntry.weight),
           height: parseFloat(newEntry.height),
-          date: newEntry.date
+          date: today // Gán ngày mới
         }
       ].sort((a, b) => a.day - b.day);
     }
 
     setGrowthData(updatedData);
-    setNewEntry({ day: '', week: '', weight: '', height: '', date: '' });
+    setNewEntry({ day: '', week: '', weight: '', height: '' });
     setError('');
     setActiveTab('chart');
   };
@@ -126,18 +125,6 @@ const UpdateData = ({ growthData, setGrowthData, setActiveTab }) => {
               min="8"
               max="42"
               placeholder="8-42"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Date
-            </label>
-            <input
-              type="date"
-              name="date"
-              value={newEntry.date}
-              onChange={handleInputChange}
-              className="w-full p-2 border border-gray-300 rounded"
             />
           </div>
         </div>
@@ -197,4 +184,3 @@ const UpdateData = ({ growthData, setGrowthData, setActiveTab }) => {
 };
 
 export default UpdateData;
-

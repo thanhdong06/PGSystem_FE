@@ -219,7 +219,7 @@ const Navbar = ({ toggleDrawer }) => {
                 Log in
               </Link>
               <div className="divider divider-horizontal"></div>
-              <Link to="/register" className="link link-primary">
+              <Link to="/login" className="link link-primary">
                 Sign up
               </Link>
             </div>

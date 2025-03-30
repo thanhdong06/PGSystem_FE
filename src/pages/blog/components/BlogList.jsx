@@ -19,33 +19,33 @@ const BlogList = () => {
 
         let data = await response.json();
 
-        // Sort blogs
+        // Sort blogs by creation date (latest first) and take the latest 6
         data = data
           .sort((a, b) => new Date(b.createAt) - new Date(a.createAt))
           .slice(0, 6);
 
-        // Fetch comments for each blog
-        const blogsWithComments = await Promise.all(
+        // Fetch comments and ensure fullName is properly assigned
+        const blogsWithDetails = await Promise.all(
           data.map(async (blog) => {
             try {
               const commentResponse = await fetch(
                 `https://pgsystem-g2ehcecxdkd5bjex.southeastasia-01.azurewebsites.net/api/Comment/by-bid/${blog.bid}`
               );
 
-              if (!commentResponse.ok) {
-                return { ...blog, commentCount: 0 }; // No comments found
-              }
-
-              const comments = await commentResponse.json();
-              return { ...blog, commentCount: comments.length };
+              const comments = commentResponse.ok ? await commentResponse.json() : [];
+              return {
+                ...blog,
+                commentCount: comments.length,
+                authorName: blog.user?.fullName || "Unknown" // Ensure we get fullName
+              };
             } catch (error) {
               console.error(`Error fetching comments for blog ${blog.bid}:`, error);
-              return { ...blog, commentCount: 0 }; // Error handling
+              return { ...blog, commentCount: 0, authorName: blog.user?.fullName || "Unknown" };
             }
           })
         );
 
-        setBlogs(blogsWithComments);
+        setBlogs(blogsWithDetails);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -71,7 +71,7 @@ const BlogList = () => {
           key={blog.bid}
           blogLink={`/blog/${blog.bid}`}
           userProfileLink={`/user/${blog.aid}`}
-          userName={blog.authorName || "Unknown"}
+          userName={blog.authorName} // Correctly displays fullName
           text={blog.title}
           comments={blog.commentCount || 0}
         />
@@ -81,3 +81,4 @@ const BlogList = () => {
 };
 
 export default BlogList;
+  

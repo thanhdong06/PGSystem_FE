@@ -4,7 +4,7 @@ import Footer from "../../components/footer/Footer";
 const subscriptionPlans = [
   {
     name: "Basic",
-    price: 9,
+    price: 1000,
     features: [
       "Weekly fetal growth updates",
       "Basic pregnancy health tracking",
@@ -19,7 +19,7 @@ const subscriptionPlans = [
   },
   {
     name: "Standard",
-    price: 19,
+    price: 2000,
     features: [
       "Daily fetal growth updates",
       "Advanced pregnancy health tracking",

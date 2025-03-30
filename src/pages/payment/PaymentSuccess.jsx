@@ -12,9 +12,21 @@ const PaymentSuccess = () => {
     console.log("Payment Status:", status);
     console.log("Membership ID from URL:", membershipId);
     console.log("User ID:", userId);
+    console.log(localStorage.getItem("user"));
+
 
     useEffect(() => {
-        if (status === "success" && userId && membershipId) {
+        console.log("Effect triggered! Status:", status, "User ID:", userId, "Membership ID:", membershipId);
+    
+        if (status === "PAID" && userId && membershipId) {
+            registerMembership(userId, membershipId);
+        } else {
+            toast.error("Payment Failed or User Not Found!", { position: "top-right", autoClose: 3000 });
+        }
+    }, [status, userId, membershipId]);
+
+    useEffect(() => {
+        if (status === "PAID" && userId && membershipId) {
             registerMembership(userId, membershipId);
         } else {
             toast.error("Payment Failed or User Not Found!", { position: "top-right", autoClose: 3000 });

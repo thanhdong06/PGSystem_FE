@@ -28,7 +28,8 @@ const MemberSidebar = () => {
 
   return (
     <div
-      className={`min-h-screen bg-gray-900 text-white p-5 flex flex-col justify-between ${
+      style={{ backgroundColor: "#485460" }}
+      className={`min-h-screen text-white p-5 flex flex-col justify-between ${
         isOpen ? "w-64" : "w-20"
       } transition-all duration-300`}
     >

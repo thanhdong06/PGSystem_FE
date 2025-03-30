@@ -133,9 +133,9 @@ function UserManagement() {
                 <th className="w-1/12">Role</th>
                 <th className="w-1/12">Created At</th>
                 <th className="w-1/12">Blog Count</th>
-                <th className="w-1/12">Comment Count</th>
+                <th className="w-1/12">Comment </th>
                 <th className="w-1/12">Pregnant?</th>
-                <th className="w-1/12">Pregnancy Weeks</th>
+                <th className="w-1/12">Pregnancy  </th>
                 <th className="w-1/12">Actions</th>
               </tr>
             </thead>
@@ -292,7 +292,7 @@ function UserManagement() {
             </select>
 
             <label className="label mt-2">
-              <span className="label-text">Pregnancy Weeks</span>
+              <span className="label-text">Pregnancy </span>
             </label>
             <input
               type="number"

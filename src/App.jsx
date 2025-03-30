@@ -63,7 +63,7 @@ function App() {
       ],
     },
     {
-      path: "/paymentsuccess",
+      path: "/payment-successfully",
       element: (
         <Layout>
           <PaymentSuccess />
@@ -75,6 +75,8 @@ function App() {
       element: <Login />,
     },
    
+
+    
     {
       path: "/test",
       element: <Test />,
