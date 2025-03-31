@@ -16,6 +16,7 @@ import OvulationCalculator from "./pages/tools/ovulationcalculation/OvulationCal
 import PregnancyDiagnosis from "./pages/tools/pregnancydiagnosis/PegnancyDiagnosis";
 import BabyNamesFinder from "./pages/tools/babynamesfinder/BabyNamesFinder";
 import PaymentSuccess from "./pages/payment/paymentsuccess";
+import PaymentCancel from "./pages/payment/PaymentCancel";
 import Transactions from "./pages/admin/transactions/Transactions";
 import Dashboard from "./pages/admin/dashboard/DashBoard";
 import UserManagement from "./pages/admin/usermanagement/UserManagement";
@@ -68,6 +69,14 @@ function App() {
       element: (
         <Layout>
           <PaymentSuccess />
+        </Layout>
+      ),
+    },
+    {
+      path: "/payment-cancel",
+      element: (
+        <Layout>
+          <PaymentCancel />
         </Layout>
       ),
     },
