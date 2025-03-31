@@ -25,6 +25,7 @@ import AdminLayout from "./components/layout/AdminLayout";
 // Import ToastContainer và CSS của react-toastify
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import MembershipManagement from "./pages/admin/Memberships/Memberships";
 
 
 function App() {
@@ -143,6 +144,7 @@ function App() {
         { path: "usermanagement", element: <UserManagement /> },
         { path: "blogmanagement", element: <BlogManagement /> },
         { path: "transactions", element: <Transactions /> },
+        { path: "memberships", element: <MembershipManagement /> },
       ],
     },
   ]);

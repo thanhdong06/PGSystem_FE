@@ -34,6 +34,11 @@ const routes = [
     icon: <CurrencyDollarIcon className={iconClasses} />,
     name: "Transactions",
   },
+  {
+    path: "/admin/memberships",
+    icon: <HomeIcon className={iconClasses} />,
+    name: "Memberships",
+  },
 ];
 
 const AdminSidebar = () => {
@@ -85,8 +90,6 @@ const AdminSidebar = () => {
             {isOpen ? "➖" : "➕"}
           </button>
         </div>
-
-       
 
         {/* Sidebar Links */}
         <ul className="space-y-3">
