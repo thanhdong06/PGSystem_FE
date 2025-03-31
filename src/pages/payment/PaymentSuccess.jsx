@@ -5,9 +5,10 @@ import { toast } from "react-toastify";
 const PaymentSuccess = () => {
     const [searchParams] = useSearchParams();
     const status = searchParams.get("status");
-    const membershipId = searchParams.get("membershipId"); 
+    const membershipId = JSON.parse(localStorage.getItem("membershipId"));
     const user = JSON.parse(localStorage.getItem("user"));
-    const userId = user?.id;
+    const userId = user?.uid;
+
 
     console.log("Payment Status:", status);
     console.log("Membership ID from URL:", membershipId);
@@ -16,61 +17,45 @@ const PaymentSuccess = () => {
 
 
     useEffect(() => {
-        console.log("Effect triggered! Status:", status, "User ID:", userId, "Membership ID:", membershipId);
-    
-        if (status === "PAID" && userId && membershipId) {
-            registerMembership(userId, membershipId);
-        } else {
-            toast.error("Payment Failed or User Not Found!", { position: "top-right", autoClose: 3000 });
-        }
-    }, [status, userId, membershipId]);
-
-    useEffect(() => {
-        if (status === "PAID" && userId && membershipId) {
-            registerMembership(userId, membershipId);
-        } else {
-            toast.error("Payment Failed or User Not Found!", { position: "top-right", autoClose: 3000 });
-        }
-    }, [status, userId, membershipId]);
-
-    const registerMembership = async (userId, membershipId) => {
-        try {
-            const response = await fetch(
-                "https://pgsystem-g2ehcecxdkd5bjex.southeastasia-01.azurewebsites.net/api/Members/Register-Membership",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${localStorage.getItem("token")}`,
-                    },
-                    body: JSON.stringify({
-                        userId: userId,
-                        membershipId: membershipId,
-                    }),
+        
+        if(!status || !membershipId){
+            console.log(membershipId)
+        }    
+        if (status === "PAID") {
+            async (membershipId) => {
+                try {
+                    const response = await fetch(
+                        "https://pgsystem-g2ehcecxdkd5bjex.southeastasia-01.azurewebsites.net/api/Members/Register-Membership",
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                            },
+                            body: JSON.stringify({
+                                membershipId: membershipId,
+                            }),
+                        }
+                    );
+        
+                    console.log("Response status:", response.status);
+                    const data = await response.json();
+                    console.log("Membership Registration Response:", data);
+        
+                } catch (error) {
+                    console.error("Membership Update Error:", error);
                 }
-            );
-
-            const data = await response.json();
-            console.log("Membership Registration Response:", data);
-
-            if (data.status === "200") {
-                toast.success("Membership updated successfully!", { position: "top-right", autoClose: 3000 });
-            } else {
-                throw new Error(data.message || "Failed to update membership.");
-            }
-        } catch (error) {
-            console.error("Membership Update Error:", error);
-            toast.error(error.message || "An error occurred while updating membership.", {
-                position: "top-right",
-                autoClose: 3000,
-            });
+            };
+        
+        } else {
+            toast.error("Payment Failed or User Not Found!", { position: "top-right", autoClose: 3000 });
         }
-    };
+    }, []);
 
     return (
         <div className="flex items-center justify-center h-screen">
             <h2 className="text-2xl font-bold">
-                {status === "success" ? "Payment Successful! 🎉 Updating Membership..." : "Payment Failed ❌"}
+                {status === "PAID" ? "Payment Successful! 🎉" : "Payment Failed ❌"}
             </h2>
         </div>
     );

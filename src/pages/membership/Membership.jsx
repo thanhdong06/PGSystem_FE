@@ -1,74 +1,32 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Footer from "../../components/footer/Footer";
 
-const subscriptionPlans = [
-  {
-    name: "Basic",
-    price: 1000,
-    features: [
-      "Weekly fetal growth updates",
-      "Basic pregnancy health tracking",
-      "Kick & movement counter",
-    ],
-    unavailableFeatures: [
-      "Personalized pregnancy insights",
-      "Doctor consultation reports",
-      "AI-based pregnancy recommendations",
-    ],
-    isPopular: false,
-  },
-  {
-    name: "Standard",
-    price: 2000,
-    features: [
-      "Daily fetal growth updates",
-      "Advanced pregnancy health tracking",
-      "Kick & movement counter",
-      "Personalized pregnancy insights",
-    ],
-    unavailableFeatures: [
-      "Doctor consultation reports",
-      "AI-based pregnancy recommendations",
-    ],
-    isPopular: false,
-  },
-  {
-    name: "Premium",
-    price: 29,
-    features: [
-      "Real-time fetal growth tracking",
-      "Advanced pregnancy health tracking",
-      "Kick & contraction tracker",
-      "Doctor consultation reports",
-      "AI-based pregnancy recommendations",
-    ],
-    unavailableFeatures: ["3D Ultrasound scan integration"],
-    isPopular: true,
-  },
-  {
-    name: "Ultimate",
-    price: 49,
-    features: [
-      "Real-time fetal growth tracking",
-      "Comprehensive pregnancy health monitoring",
-      "Kick & contraction tracker",
-      "Doctor consultation reports",
-      "AI-based pregnancy insights",
-      "3D Ultrasound scan integration",
-    ],
-    unavailableFeatures: [],
-    isPopular: false,
-  },
-];
 
 const Membership = () => {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
 
+  const [subscriptionPlans, setSubcriptionPlans] = useState();
+
+  useEffect(()=> {
+    const getMembership = async () => {
+      const response = await fetch ("https://pgsystem-g2ehcecxdkd5bjex.southeastasia-01.azurewebsites.net/api/Members/Memberships",{
+        method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+      })
+      const data = await response.json();
+      console.log(data);
+      setSubcriptionPlans(data.value.data);
+    }
+    getMembership()
+  },[])
   // Handle Payment Function
   const handlePayment = async (plan, membershipId) => {
     const token = localStorage.getItem("token");
-
+    const membership = localStorage.setItem("membershipId", membershipId);
+    console.log("Membership : ", membership);
     if (!token) {
       setToastMessage("⚠️ Please login before making a payment.");
       setShowToast(true);
@@ -121,62 +79,53 @@ const Membership = () => {
   };
 
   return (
-    <div>
+    <div className="min-h-screen bg-gray-100">
+      {/* Toast Notification */}
       {showToast && (
-        <div className="toast toast-end fixed z-50 p-4">
-          <div className="alert alert-warning text-white bg-yellow-600">
-            <span>{toastMessage}</span>
-          </div>
+        <div className="fixed top-4 right-4 bg-black text-white px-6 py-3 rounded-md shadow-lg">
+          {toastMessage}
         </div>
       )}
-
-      <div className="flex flex-col min-h-screen w-5/6 justify-center mx-auto">
-        <div className="h-screen">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 p-10 justify-center items-stretch place-items-center">
-            {subscriptionPlans.map((plan, index) => (
-              <div
-                key={index}
-                className="card border-collapse border-[1px] w-80 bg-base-300 shadow-lg flex flex-col"
-              >
-                <div className="card-body flex flex-col flex-grow">
-                  {plan.isPopular && (
-                    <span className="badge badge-xs badge-warning self-start">
-                      Most Popular
-                    </span>
-                  )}
-                  <div className="flex justify-between">
-                    <h2 className="text-3xl font-bold">{plan.name}</h2>
-                    <span className="text-xl">${plan.price}/mo</span>
-                  </div>
-                  <ul className="mt-6 flex flex-col gap-2 text-xs flex-grow">
-                    {plan.features.map((feature, i) => (
-                      <li key={i} className="flex items-center">
-                        ✅ {feature}
-                      </li>
-                    ))}
-                    {plan.unavailableFeatures.map((feature, i) => (
-                      <li key={i} className="opacity-50 flex items-center">
-                        ❌ {feature}
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="mt-auto">
-                    <button
-                      className="btn btn-primary btn-block"
-                      onClick={() => handlePayment(plan, index + 1)}
-                    >
-                      Subscribe
-                    </button>
-                  </div>
+      
+      {/* Membership Plans */}
+      <div className="container mx-auto px-4 py-16">
+        <h1 className="text-4xl font-bold text-center mb-12">Membership Plans</h1>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {subscriptionPlans?.map((plan) => (
+            <div 
+              key={plan.mid}
+              className="bg-white rounded-lg shadow-lg overflow-hidden transform transition duration-300 hover:scale-105"
+            >
+              <div className="p-8">
+                <h2 className="text-2xl font-bold text-center mb-4 capitalize">
+                  {plan.name}
+                </h2>
+                <div className="text-center mb-8">
+                  <span className="text-4xl font-bold">${plan.price}</span>
                 </div>
+                <p className="text-gray-600 text-center mb-8">
+                  {plan.description}
+                </p>
+                <button
+                  onClick={() => handlePayment(plan, plan.mid)}
+                  className={`w-full py-3 px-6 rounded-full text-white font-semibold
+                    ${plan.name === 'gold' 
+                      ? 'bg-yellow-500 hover:bg-yellow-600' 
+                      : plan.name === 'silver'
+                      ? 'bg-gray-400 hover:bg-gray-500'
+                      : 'bg-blue-500 hover:bg-blue-600'
+                    }`}
+                >
+                  {plan.price === 0 ? 'Get Started Free' : 'Subscribe Now'}
+                </button>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </div>
       <Footer />
     </div>
-  );
+  )   
 };
 
 export default Membership;
