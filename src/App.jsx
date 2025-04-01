@@ -143,6 +143,7 @@ function App() {
         </Layout>
       ),
     },
+  
     //admin part
     {
       path: "/admin",
