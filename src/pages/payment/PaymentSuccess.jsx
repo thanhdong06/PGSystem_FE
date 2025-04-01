@@ -9,18 +9,13 @@ const PaymentSuccess = () => {
     const user = JSON.parse(localStorage.getItem("user"));
     const userId = user?.uid;
 
-
     console.log("Payment Status:", status);
     console.log("Membership ID from URL:", membershipId);
     console.log("User ID:", userId);
     console.log(localStorage.getItem("user"));
 
-
     useEffect(() => {
-        console.log("something");
-        
-        const some = async (membershipId) => {
-            
+        const updateMembership = async (membershipId) => {
             try {
                 const response = await fetch(
                     "https://localhost:7215/api/Members/Register-Membership",
@@ -35,21 +30,35 @@ const PaymentSuccess = () => {
                         }),
                     }
                 );
-    
-                console.log(response)
-                console.log("Response status:", response.status);
+
+                if (!response.ok) {
+                    throw new Error("Failed to update membership");
+                }
+
                 const data = await response.json();
-                console.log("Membership Registration Response:", data);
                 
-                localStorage.setItem("token", data.value.data.loginReponse.token)
-                console.log(data.value.data.loginReponse.token);
+                // Update token and user role in localStorage
+                localStorage.setItem("token", data.value.data.loginReponse.token);
+                
+                // Update user role in localStorage
+                const storedUser = JSON.parse(localStorage.getItem("user"));
+                if (storedUser) {
+                    storedUser.role = "Member";
+                    localStorage.setItem("user", JSON.stringify(storedUser));
+                }
+
+                // Force a reload to update the Navbar
+                window.location.reload();
                 
             } catch (error) {
                 console.error("Membership Update Error:", error);
             }
         };
-        some(membershipId)
-    }, [status]);
+        
+        if (status === "PAID") {
+            updateMembership(membershipId);
+        }
+    }, [status, membershipId]);
 
     return (
         <div className="flex items-center justify-center h-screen">
