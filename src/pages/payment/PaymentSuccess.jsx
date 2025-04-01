@@ -17,40 +17,39 @@ const PaymentSuccess = () => {
 
 
     useEffect(() => {
+        console.log("something");
         
-        if(!status || !membershipId){
-            console.log(membershipId)
-        }    
-        if (status === "PAID") {
-            async (membershipId) => {
-                try {
-                    const response = await fetch(
-                        "https://pgsystem-g2ehcecxdkd5bjex.southeastasia-01.azurewebsites.net/api/Members/Register-Membership",
-                        {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                                Authorization: `Bearer ${localStorage.getItem("token")}`,
-                            },
-                            body: JSON.stringify({
-                                membershipId: membershipId,
-                            }),
-                        }
-                    );
-        
-                    console.log("Response status:", response.status);
-                    const data = await response.json();
-                    console.log("Membership Registration Response:", data);
-        
-                } catch (error) {
-                    console.error("Membership Update Error:", error);
-                }
-            };
-        
-        } else {
-            toast.error("Payment Failed or User Not Found!", { position: "top-right", autoClose: 3000 });
-        }
-    }, []);
+        const some = async (membershipId) => {
+            
+            try {
+                const response = await fetch(
+                    "https://localhost:7215/api/Members/Register-Membership",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${localStorage.getItem("token")}`,
+                        },
+                        body: JSON.stringify({
+                            membershipId: membershipId,
+                        }),
+                    }
+                );
+    
+                console.log(response)
+                console.log("Response status:", response.status);
+                const data = await response.json();
+                console.log("Membership Registration Response:", data);
+                
+                localStorage.setItem("token", data.value.data.loginReponse.token)
+                console.log(data.value.data.loginReponse.token);
+                
+            } catch (error) {
+                console.error("Membership Update Error:", error);
+            }
+        };
+        some(membershipId)
+    }, [status]);
 
     return (
         <div className="flex items-center justify-center h-screen">
