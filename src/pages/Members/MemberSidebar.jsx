@@ -20,6 +20,11 @@ const routes = [
     icon: <ChartBarIcon className={iconClasses} />,
     name: "Fetal Growth Tracker",
   },
+  {
+    path: "/member/DoctorAppointmentReminder",
+    icon: <CalendarIcon className={iconClasses} />,
+    name: "DoctorAppointment",
+  },
 ];
 
 const MemberSidebar = () => {

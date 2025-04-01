@@ -27,6 +27,7 @@ import AdminLayout from "./components/layout/AdminLayout";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import MembershipManagement from "./pages/admin/Memberships/Memberships";
+import DoctorAppointmentReminder from "./pages/DoctorAppointment/DoctorAppointment";
 
 
 function App() {
@@ -62,6 +63,7 @@ function App() {
         { index: true, element: <Navigate to="/member/reminder" replace /> },
         { path: "reminder", element: <CalendarView /> },
         { path: "fetalgrowthtracker", element: <FatalGrowthTracker /> },
+        { path: "DoctorAppointmentReminder", element: <DoctorAppointmentReminder/> },
       ],
     },
     {

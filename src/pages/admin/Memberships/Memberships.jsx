@@ -21,7 +21,7 @@ function MembershipManagement() {
       setLoading(true);
       const response = await fetch(API_URL);
       const data = await response.json();
-      // Giả sử API trả về: { value: { status: '200', message: '...', data: [ ... ] } }
+      // API returns: { value: { status: '200', message: '...', data: [ ... ] } }
       setMemberships(data.value.data);
     } catch (error) {
       console.error("Error fetching memberships:", error);
@@ -72,29 +72,23 @@ function MembershipManagement() {
     }
   };
 
-  // Function to delete a membership - Updated to use membership.mid
+  // Function to delete a membership - Removed token authentication as requested
   const handleDeleteMembership = async (membershipMid) => {
     setDeleteLoading(true);
     try {
-      // Lấy token từ localStorage hoặc nguồn xác thực của bạn
-      const token = localStorage.getItem("authToken");
-      if (!token) {
-        throw new Error("Authorization token not found");
-      }
-
-      // Tạo URL với query parameter MID
+      // Create URL with query parameter MID
       const deleteUrl = `${DELETE_API_URL}?MID=${membershipMid}`;
       console.log("Delete URL:", deleteUrl);
 
       const response = await fetch(deleteUrl, {
         method: "DELETE",
         headers: {
-          "accept": "text/plain",
-          "Authorization": `Bearer ${token}`
+          "accept": "text/plain"
+          // Token authentication removed as requested
         }
       });
 
-      // Đọc phản hồi từ API
+      // Read API response
       const result = await response.text();
       console.log("Delete API response:", result);
 
@@ -103,11 +97,11 @@ function MembershipManagement() {
         throw new Error(`Failed to delete membership: ${result}`);
       }
 
-      // Nếu thành công, refresh danh sách memberships
+      // If successful, refresh memberships list
       await fetchMemberships();
     } catch (error) {
       console.error("Error deleting membership:", error);
-      // Có thể hiển thị thông báo lỗi cho người dùng tại đây
+      // Error message could be displayed to the user here
     } finally {
       setDeleteLoading(false);
       setSelectedMembershipId(null);
