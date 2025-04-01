@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import Comment from "./Comment";
 import { toast } from "react-toastify";
 
-const API_BASE_URL = "https://localhost:7215/api";
+const API_BASE_URL = "https://pgsystem-g2ehcecxdkd5bjex.southeastasia-01.azurewebsites.net/";
 
 const CommentList = () => {
   const { bid } = useParams(); // Lấy blog ID từ URL

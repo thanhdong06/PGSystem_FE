@@ -28,6 +28,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import MembershipManagement from "./pages/admin/Memberships/Memberships";
 import DoctorAppointmentReminder from "./pages/DoctorAppointment/DoctorAppointment";
+import MemberList from "./pages/admin/MemberList/MemberList";
 
 
 function App() {
@@ -157,6 +158,7 @@ function App() {
         { path: "blogmanagement", element: <BlogManagement /> },
         { path: "transactions", element: <Transactions /> },
         { path: "memberships", element: <MembershipManagement /> },
+        { path: "memberlist", element: <MemberList /> },
       ],
     },
   ]);
