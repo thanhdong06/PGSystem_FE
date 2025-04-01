@@ -8,7 +8,7 @@ const PaymentCancel = () => {
     return (
         <div className="flex items-center justify-center h-screen">
             <h2 className="text-2xl font-bold">
-                thanh toan that bai. 
+                Thanh toán thất bại.
             </h2>
         </div>
     );
