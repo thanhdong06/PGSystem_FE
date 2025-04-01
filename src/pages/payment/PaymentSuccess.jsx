@@ -18,7 +18,7 @@ const PaymentSuccess = () => {
         const updateMembership = async (membershipId) => {
             try {
                 const response = await fetch(
-                    "https://localhost:7215/api/Members/Register-Membership",
+                    "https://pgsystem-g2ehcecxdkd5bjex.southeastasia-01.azurewebsites.net/api/Members/Register-Membership",
                     {
                         method: "POST",
                         headers: {

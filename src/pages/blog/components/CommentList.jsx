@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import Comment from "./Comment";
 import { toast } from "react-toastify";
 
-const API_BASE_URL = "https://localhost:7215/api";
+const API_BASE_URL = "https://pgsystem-g2ehcecxdkd5bjex.southeastasia-01.azurewebsites.net/api";
 
 const CommentList = () => {
   const { bid } = useParams(); // Lấy blog ID từ URL
@@ -41,14 +41,14 @@ const CommentList = () => {
   const handleCommentSubmit = async (e) => {
     //check
 
-    fetch("https://pgsystem-g2ehcecxdkd5bjex.southeastasia-01.azurewebsites.net/api/Comment/create", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ content: "Test comment", bid: 73, memberID: 17 })
-    })
-    .then(response => response.json())
-    .then(data => console.log(" API Response:", data))
-    .catch(error => console.error("API Error:", error));
+    // fetch("https://pgsystem-g2ehcecxdkd5bjex.southeastasia-01.azurewebsites.net/api/Comment/create", {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify({ content: "Test comment", bid: 73, memberID: 17 })
+    // })
+    // .then(response => response.json())
+    // .then(data => console.log(" API Response:", data))
+    // .catch(error => console.error("API Error:", error));
 
     // fetch("https://pgsystem-g2ehcecxdkd5bjex.southeastasia-01.azurewebsites.net/api/Comment/create", {
     //   method: "POST",
@@ -97,11 +97,11 @@ const CommentList = () => {
 
       console.log("Comment API Response:", response);
 
-      if (!response.ok) {
-        const errorResponse = await response.json();
-        console.error("Comment API Error:", errorResponse);
-        throw new Error(errorResponse.message || "Failed to post comment.");
-      }
+      // if (!response.ok) {
+      //   const errorResponse = await response.json();
+      //   console.error("Comment API Error:", errorResponse);
+      //   throw new Error(errorResponse.message || "Failed to post comment.");
+      // }
 
       const postedComment = await response.json();
       console.log("Comment Successfully Posted:", postedComment);
@@ -146,7 +146,7 @@ const CommentList = () => {
         <div className="space-y-6">
           {comments.map((comment, index) => (
             <div key={comment.cid} className="w-full">
-              <Comment text={comment.content} userName={`${comment.user.fullName}`} createAt={comment.createAt} />
+              <Comment text={comment.content} userName={`${comment.user?.fullName}`} createAt={comment.createAt} />
               {index < comments.length - 1 && (
                 <div className="divider"></div>
               )}
