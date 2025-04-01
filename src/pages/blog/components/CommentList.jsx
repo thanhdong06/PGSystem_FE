@@ -43,7 +43,7 @@ const CommentList = () => {
     fetch("https://pgsystem-g2ehcecxdkd5bjex.southeastasia-01.azurewebsites.net/api/Comment/create", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ content: "Test comment", bid: 1, memberID: 0 })
+      body: JSON.stringify({ content: "Test comment", bid: 73, memberID: 17 })
     })
     .then(response => response.json())
     .then(data => console.log(" API Response:", data))

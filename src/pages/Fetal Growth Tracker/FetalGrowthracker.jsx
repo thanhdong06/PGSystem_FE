@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Chart from './Chart';
 import AddDataForm from './AddDataForm';
 import PostForm from './PostForm';
@@ -63,6 +63,15 @@ const PregnancyTracker = () => {
     }
   ]);
 
+  // Lấy thông tin user (full name) từ localStorage
+  const [user, setUser] = useState({ fullName: 'Sarah' });
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
   return (
     <div className="max-w-6xl mx-auto py-6 px-4">
       <header className="mb-8 text-center">
@@ -97,7 +106,7 @@ const PregnancyTracker = () => {
                 </svg>
               </div>
               <div>
-                <h2 className="text-xl font-semibold">Welcome, Sarah</h2>
+                <h2 className="text-xl font-semibold">Welcome, {user.fullName}</h2>
                 <p className="text-gray-600">Current week: 32</p>
               </div>
             </div>
@@ -154,22 +163,19 @@ const PregnancyTracker = () => {
         {/* Main content area */}
         <main className="lg:col-span-2">
           {currentView === 'chart' ? (
-            <>
-              <Chart 
-                growthData={growthData}
-                viewMode={viewMode}
-                setViewMode={setViewMode}
-                activeMetric={activeMetric}
-                setActiveMetric={setActiveMetric}
-              />
-            </>
+            <Chart 
+              growthData={growthData}
+              viewMode={viewMode}
+              setViewMode={setViewMode}
+              activeMetric={activeMetric}
+              setActiveMetric={setActiveMetric}
+            />
           ) : (
             <DataTable 
               growthData={growthData}
               weeklyData={weeklyData}
-              // DataTable có thể sử dụng prop tableViewMode riêng nếu cần, hoặc mặc định là chế độ 'week'
               tableViewMode={'week'}
-              setTableViewMode={()=>{}}
+              setTableViewMode={() => {}}
             />
           )}
 
@@ -177,7 +183,7 @@ const PregnancyTracker = () => {
 
           <CommunityPosts posts={posts} />
         </main>
-      </div>
+      </div>  
     </div>
   );
 };
