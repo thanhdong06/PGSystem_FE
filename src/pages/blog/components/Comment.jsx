@@ -9,6 +9,7 @@
     commentLink = "#",
     likes = 0,
     comments = 0,
+    createAt
   }) => {
     const [showMore, setShowMore] = useState(false);
     const [showReplyInput, setShowReplyInput] = useState(false);
@@ -34,6 +35,17 @@
       }
     };
 
+    const changeTime = (time) =>{
+      const date = new Date(time);
+      const formattedDate = new Intl.DateTimeFormat('vi-VN', { 
+    year: 'numeric', 
+    month: '2-digit', 
+    day: '2-digit', 
+    hour: '2-digit', 
+    minute: '2-digit'
+}).format(date);
+return formattedDate
+    }
     return (
       <div className="block max-w-[800px] rounded-lg p-4 transition">
         {/* User Info */}
@@ -62,7 +74,7 @@
             >
               {userName}
             </Link>
-            <span className="text-sm text-gray-500">2 hours ago</span>
+            <span className="text-sm text-gray-500">{changeTime(createAt)}</span>
           </div>
         </div>
 

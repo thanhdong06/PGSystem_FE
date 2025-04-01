@@ -9,48 +9,56 @@ const PaymentSuccess = () => {
     const user = JSON.parse(localStorage.getItem("user"));
     const userId = user?.uid;
 
-
     console.log("Payment Status:", status);
     console.log("Membership ID from URL:", membershipId);
     console.log("User ID:", userId);
     console.log(localStorage.getItem("user"));
 
-
     useEffect(() => {
-        
-        if(!status || !membershipId){
-            console.log(membershipId)
-        }    
-        if (status === "PAID") {
-            async (membershipId) => {
-                try {
-                    const response = await fetch(
-                        "https://pgsystem-g2ehcecxdkd5bjex.southeastasia-01.azurewebsites.net/api/Members/Register-Membership",
-                        {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                                Authorization: `Bearer ${localStorage.getItem("token")}`,
-                            },
-                            body: JSON.stringify({
-                                membershipId: membershipId,
-                            }),
-                        }
-                    );
-        
-                    console.log("Response status:", response.status);
-                    const data = await response.json();
-                    console.log("Membership Registration Response:", data);
-        
-                } catch (error) {
-                    console.error("Membership Update Error:", error);
+        const updateMembership = async (membershipId) => {
+            try {
+                const response = await fetch(
+                    "https://localhost:7215/api/Members/Register-Membership",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${localStorage.getItem("token")}`,
+                        },
+                        body: JSON.stringify({
+                            membershipId: membershipId,
+                        }),
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error("Failed to update membership");
                 }
-            };
+
+                const data = await response.json();
+                
+                // Update token and user role in localStorage
+                localStorage.setItem("token", data.value.data.loginReponse.token);
+                
+                // Update user role in localStorage
+                const storedUser = JSON.parse(localStorage.getItem("user"));
+                if (storedUser) {
+                    storedUser.role = "Member";
+                    localStorage.setItem("user", JSON.stringify(storedUser));
+                }
+
+                // Force a reload to update the Navbar
+                window.location.reload();
+                
+            } catch (error) {
+                console.error("Membership Update Error:", error);
+            }
+        };
         
-        } else {
-            toast.error("Payment Failed or User Not Found!", { position: "top-right", autoClose: 3000 });
+        if (status === "PAID") {
+            updateMembership(membershipId);
         }
-    }, []);
+    }, [status, membershipId]);
 
     return (
         <div className="flex items-center justify-center h-screen">

@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import Comment from "./Comment";
 import { toast } from "react-toastify";
 
-const API_BASE_URL = "https://pgsystem-g2ehcecxdkd5bjex.southeastasia-01.azurewebsites.net/api";
+const API_BASE_URL = "https://localhost:7215/api";
 
 const CommentList = () => {
   const { bid } = useParams(); // Lấy blog ID từ URL
@@ -40,6 +40,7 @@ const CommentList = () => {
 
   const handleCommentSubmit = async (e) => {
     //check
+
     fetch("https://pgsystem-g2ehcecxdkd5bjex.southeastasia-01.azurewebsites.net/api/Comment/create", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -48,6 +49,15 @@ const CommentList = () => {
     .then(response => response.json())
     .then(data => console.log(" API Response:", data))
     .catch(error => console.error("API Error:", error));
+
+    // fetch("https://pgsystem-g2ehcecxdkd5bjex.southeastasia-01.azurewebsites.net/api/Comment/create", {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify({ content: "Test comment", bid: 1, memberID: 0 })
+    // })
+    // .then(response => response.json())
+    // .then(data => console.log(" API Response:", data))
+    // .catch(error => console.error("API Error:", error));
     //check
     console.log("Comment Submit Clicked!");
     e.preventDefault();
@@ -59,7 +69,8 @@ const CommentList = () => {
     }
 
     const user = JSON.parse(storedUser);
-    if (!user || !user.user || user.user.uid === undefined) {
+    console.log(user)
+    if (!user || user.uid === undefined) {
       toast.error("Invalid user data. Please log in again.", { position: "top-right", autoClose: 2000 });
       return;
     }
@@ -74,11 +85,13 @@ const CommentList = () => {
     console.log(" Sending Comment Data:", newCommentData);
 
     try {
+      console.log(localStorage.getItem("token"))
       const response = await fetch(`${API_BASE_URL}/Comment/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-        },
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
         body: JSON.stringify(newCommentData),
       });
 
@@ -133,7 +146,7 @@ const CommentList = () => {
         <div className="space-y-6">
           {comments.map((comment, index) => (
             <div key={comment.cid} className="w-full">
-              <Comment text={comment.content} userName={`User ${comment.memberID}`} />
+              <Comment text={comment.content} userName={`${comment.user.fullName}`} createAt={comment.createAt} />
               {index < comments.length - 1 && (
                 <div className="divider"></div>
               )}
