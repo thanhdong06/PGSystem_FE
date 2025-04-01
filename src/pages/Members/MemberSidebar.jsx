@@ -28,7 +28,7 @@ const MemberSidebar = () => {
 
   return (
     <div
-      style={{ backgroundColor: "#485460" }}
+      style={{ backgroundColor: "#3742fa" }}
       className={`min-h-screen text-white p-5 flex flex-col justify-between ${
         isOpen ? "w-64" : "w-20"
       } transition-all duration-300`}
@@ -54,7 +54,7 @@ const MemberSidebar = () => {
         {/* Back to Home Button */}
         <Link
           to="/"
-          className="flex items-center gap-3 p-3 rounded-lg bg-gray-800 hover:bg-gray-700 transition-all mb-4"
+          className="flex items-center gap-3 p-3 rounded-lg bg-blue-800 hover:bg-gray-700 transition-all mb-4"
         >
           <HomeIcon className={iconClasses} />
           {isOpen && <span>Back to Home</span>}
@@ -69,7 +69,7 @@ const MemberSidebar = () => {
                 className={`flex items-center gap-3 p-3 rounded-lg transition-all duration-200 ${
                   location.pathname === route.path
                     ? "bg-blue-500"
-                    : "hover:bg-gray-700"
+                    : "hover:bg-white-700"
                 }`}
               >
                 {route.icon}

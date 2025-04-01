@@ -6,7 +6,7 @@ function NewEventModal({ isOpen, defaultDate, onClose, onSubmit }) {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
 
-  // Khi modal mở, nếu có defaultDate thì set sẵn giá trị cho date và time
+  // Set default date and time when modal opens
   useEffect(() => {
     if (isOpen && defaultDate) {
       setDate(moment(defaultDate).format("YYYY-MM-DD"));
@@ -14,7 +14,7 @@ function NewEventModal({ isOpen, defaultDate, onClose, onSubmit }) {
     }
   }, [isOpen, defaultDate]);
 
-  // Hàm gọi API tạo reminder và trả về event được tạo từ backend
+  // API call to create a reminder
   const createReminder = async (newEvent) => {
     try {
       const response = await fetch(
@@ -22,7 +22,7 @@ function NewEventModal({ isOpen, defaultDate, onClose, onSubmit }) {
         {
           method: "POST",
           headers: {
-            accept: "application/json", // Yêu cầu nhận về JSON
+            accept: "application/json",
             "Content-Type": "application/json",
             Authorization:
               "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI0OCIsInVuaXF1ZV9uYW1lIjoiMDExMTIzMzM0NCIsInJvbGUiOiJNZW1iZXIiLCJ0b2tlblR5cGUiOiJhY2Nlc3MiLCJuYmYiOjE3NDI0NTA1MzgsImV4cCI6MTc0MjQ1MjMzOCwiaWF0IjoxNzQyNDUwNTM4LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjUxMzUiLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjQyMDAifQ.AQQvhCWFUrL1B8G18XLj5Cg8CvhLpX1Uyq94Xm0BCOo",
@@ -30,7 +30,6 @@ function NewEventModal({ isOpen, defaultDate, onClose, onSubmit }) {
           body: JSON.stringify(newEvent),
         }
       );
-      // Giả sử API trả về dữ liệu event dưới dạng JSON, bao gồm thuộc tính "rid"
       const createdEvent = await response.json();
       console.log("Create API response:", createdEvent);
       return createdEvent;
@@ -40,11 +39,10 @@ function NewEventModal({ isOpen, defaultDate, onClose, onSubmit }) {
     }
   };
 
-  // Xử lý submit form
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Gộp date và time thành ISO string cho thuộc tính dateTime
     const dateTime = moment(`${date} ${time}`, "YYYY-MM-DD HH:mm").toISOString();
 
     const newEvent = {
@@ -55,10 +53,8 @@ function NewEventModal({ isOpen, defaultDate, onClose, onSubmit }) {
       description: "null",
     };
 
-    // Gọi API tạo reminder và nhận lại event từ backend
     const createdEvent = await createReminder(newEvent);
     if (createdEvent) {
-      // Cập nhật event mới với thông tin từ backend (có rid hợp lệ)
       onSubmit(createdEvent);
     }
     handleClose();
@@ -74,47 +70,65 @@ function NewEventModal({ isOpen, defaultDate, onClose, onSubmit }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-      <div className="bg-white p-4 rounded shadow-md w-80">
-        <h2 className="text-lg font-semibold mb-4">Calendar Reminder</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-2">
-            <label className="block text-sm mb-1">Event Name</label>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm transition-opacity">
+      <div className="bg-white rounded-lg shadow-xl w-96 transform transition-all duration-300 ease-in-out">
+        <div className="bg-blue-500 text-white p-4 rounded-t-lg">
+          <h2 className="text-xl font-bold">Calendar Reminder</h2>
+        </div>
+        <form onSubmit={handleSubmit} className="p-6">
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-medium mb-2">
+              Event Name
+            </label>
             <input
               type="text"
-              className="w-full border rounded p-1"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Event"
+              placeholder="Enter event name"
               required
             />
           </div>
-          <div className="mb-2">
-            <label className="block text-sm mb-1">Select Date</label>
+          
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-medium mb-2">
+              Date
+            </label>
             <input
               type="date"
-              className="w-full border rounded p-1"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
               value={date}
               onChange={(e) => setDate(e.target.value)}
               required
             />
           </div>
-          <div className="mb-2">
-            <label className="block text-sm mb-1">Select Time</label>
+          
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-medium mb-2">
+              Time
+            </label>
             <input
               type="time"
-              className="w-full border rounded p-1"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
               value={time}
               onChange={(e) => setTime(e.target.value)}
               required
             />
           </div>
-          <div className="flex justify-end mt-4">
-            <button type="button" onClick={handleClose} className="mr-2 text-red-500">
+          
+          <div className="flex justify-end pt-4 border-t border-gray-200">
+            <button 
+              type="button" 
+              onClick={handleClose} 
+              className="mr-4 px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition"
+            >
               Cancel
             </button>
-            <button type="submit" className="px-3 py-1 rounded bg-blue-500 text-white">
-              Thêm
+            <button 
+              type="submit" 
+              className="px-4 py-2 bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition"
+            >
+              Add Event
             </button>
           </div>
         </form>
