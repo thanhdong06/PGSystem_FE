@@ -16,14 +16,14 @@ const routes = [
     name: "Calendar View",
   },
   {
-    path: "/member/fetalgrowthtracker",
-    icon: <ChartBarIcon className={iconClasses} />,
-    name: "Fetal Growth Tracker",
-  },
-  {
     path: "/member/DoctorAppointmentReminder",
     icon: <CalendarIcon className={iconClasses} />,
     name: "DoctorAppointment",
+  },
+  {
+    path: "/member/fetalgrowthtracker",
+    icon: <ChartBarIcon className={iconClasses} />,
+    name: "Fetal Growth Tracker",
   },
 ];
 

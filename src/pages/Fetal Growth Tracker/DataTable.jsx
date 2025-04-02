@@ -1,24 +1,8 @@
-// DataTable.jsx
 import React from 'react';
 
 const DataTable = ({ growthData, weeklyData, tableViewMode, setTableViewMode }) => {
-
-  const formatDate = (dateString) => {
-    // Giả sử mỗi entry có trường date dạng chuỗi ngày tháng (nếu không, bạn cần chỉnh lại)
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'short', 
-      day: 'numeric' 
-    });
-  };
-
   const getTableData = () => {
-    if (tableViewMode === 'week') {
-      return weeklyData;
-    } else {
-      return growthData;
-    }
+    return tableViewMode === 'week' ? weeklyData : growthData;
   };
 
   return (
@@ -46,6 +30,7 @@ const DataTable = ({ growthData, weeklyData, tableViewMode, setTableViewMode }) 
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
+              {/* Optionally remove the day column if not needed */}
               {tableViewMode === 'day' && (
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Day
@@ -53,9 +38,6 @@ const DataTable = ({ growthData, weeklyData, tableViewMode, setTableViewMode }) 
               )}
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Week
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Date
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Weight (g)
@@ -72,7 +54,6 @@ const DataTable = ({ growthData, weeklyData, tableViewMode, setTableViewMode }) 
                   <td className="px-6 py-4 whitespace-nowrap">{entry.day}</td>
                 )}
                 <td className="px-6 py-4 whitespace-nowrap">{entry.week}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{formatDate(entry.date)}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{entry.weight.toFixed(1)}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{entry.height.toFixed(1)}</td>
               </tr>

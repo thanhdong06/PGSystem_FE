@@ -6,40 +6,31 @@ import CommunityPosts from './CommunityPosts';
 import DataTable from './DataTable';
 
 const PregnancyTracker = () => {
-  // Sample data for demonstration (bao gồm thuộc tính date cho DataTable)
+  // Sample data without 'day' and 'date'
   const [growthData, setGrowthData] = useState([
-    { day: 56, week: 8, weight: 5, height: 1.8, date: "2025-01-01" },
-    { day: 84, week: 12, weight: 45, height: 6.5, date: "2025-01-29" },
-    { day: 112, week: 16, weight: 110, height: 14, date: "2025-02-26" },
-    { day: 140, week: 20, weight: 320, height: 25, date: "2025-03-26" },
-    { day: 168, week: 24, weight: 640, height: 30, date: "2025-04-23" },
-    { day: 196, week: 28, weight: 1000, height: 36, date: "2025-05-21" },
-    { day: 224, week: 32, weight: 1700, height: 42, date: "2025-06-18" },
-    { day: 252, week: 36, weight: 2600, height: 47, date: "2025-07-16" },
-    { day: 280, week: 40, weight: 3400, height: 50, date: "2025-08-13" },
+    { week: 8, weight: 5, height: 1.8 },
+    { week: 12, weight: 45, height: 6.5 },
+    { week: 16, weight: 110, height: 14 },
+    { week: 20, weight: 320, height: 25 },
+    { week: 24, weight: 640, height: 30 }
   ]);
 
-  // Weekly data (ví dụ: dữ liệu đã được tổng hợp theo tuần)
-  const [weeklyData, setWeeklyData] = useState([
-    { week: 8, weight: 5, height: 1.8, date: "2025-01-01" },
-    { week: 12, weight: 45, height: 6.5, date: "2025-01-29" },
-    { week: 16, weight: 110, height: 14, date: "2025-02-26" },
-    { week: 20, weight: 320, height: 25, date: "2025-03-26" },
-    { week: 24, weight: 640, height: 30, date: "2025-04-23" },
-    { week: 28, weight: 1000, height: 36, date: "2025-05-21" },
-    { week: 32, weight: 1700, height: 42, date: "2025-06-18" },
-    { week: 36, weight: 2600, height: 47, date: "2025-07-16" },
-    { week: 40, weight: 3400, height: 50, date: "2025-08-13" },
-  ]);
+  // Compute weekly data from growthData (here it’s the same as growthData)
+  const weeklyData = growthData.reduce((acc, cur) => {
+    if (!acc.some(entry => entry.week === cur.week)) {
+      acc.push(cur);
+    }
+    return acc;
+  }, []);
 
-  // State cho chế độ hiển thị chính: chart hoặc table
+  // State to toggle between Chart and Table views
   const [currentView, setCurrentView] = useState('chart');
 
-  // Các state khác của ứng dụng
+  // Other states used for the chart
   const [viewMode, setViewMode] = useState('week');
   const [activeMetric, setActiveMetric] = useState('weight');
 
-  // Community posts with experiences
+  // Community posts state
   const [posts, setPosts] = useState([
     {
       id: 1,
@@ -49,7 +40,7 @@ const PregnancyTracker = () => {
       content: "Baby has been growing so fast this month. The doctor says everything is right on track!",
       likes: 12,
       comments: 5,
-      date: "March 25, 2025"
+      // date removed
     },
     {
       id: 2,
@@ -59,11 +50,11 @@ const PregnancyTracker = () => {
       content: "Has anyone else noticed their baby's weight measuring slightly below the average? Doctor isn't concerned but I'd love to hear others' experiences.",
       likes: 24,
       comments: 18,
-      date: "March 28, 2025"
+      // date removed
     }
   ]);
 
-  // Lấy thông tin user (full name) từ localStorage
+  // Get user information from localStorage
   const [user, setUser] = useState({ fullName: 'Sarah' });
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -79,7 +70,7 @@ const PregnancyTracker = () => {
         <p className="text-gray-600 mt-2">Share your journey and track your baby's development</p>
       </header>
       
-      {/* Thanh chuyển đổi view: Chart hoặc Data Table */}
+      {/* Toggle view between Chart and Data Table */}
       <div className="flex justify-center mb-6">
         <button
           className={`px-4 py-2 mr-4 rounded-md transition-colors ${currentView === 'chart' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'}`}
@@ -102,7 +93,7 @@ const PregnancyTracker = () => {
             <div className="flex items-center mb-4">
               <div className="bg-blue-100 rounded-full p-3 mr-4">
                 <svg className="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
               </div>
               <div>
@@ -134,7 +125,7 @@ const PregnancyTracker = () => {
                 <li>
                   <a href="#" className="text-blue-600 hover:underline flex items-center">
                     <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd"></path>
+                      <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd" />
                     </svg>
                     Fetal growth charts
                   </a>
@@ -142,7 +133,7 @@ const PregnancyTracker = () => {
                 <li>
                   <a href="#" className="text-blue-600 hover:underline flex items-center">
                     <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd"></path>
+                      <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zM6 7a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
                     </svg>
                     Weekly development guide
                   </a>
@@ -150,7 +141,7 @@ const PregnancyTracker = () => {
                 <li>
                   <a href="#" className="text-blue-600 hover:underline flex items-center">
                     <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path>
+                      <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
                     </svg>
                     Community support groups
                   </a>
@@ -159,7 +150,7 @@ const PregnancyTracker = () => {
             </div>
           </div>
         </aside>
-
+        
         {/* Main content area */}
         <main className="lg:col-span-2">
           {currentView === 'chart' ? (
@@ -172,18 +163,17 @@ const PregnancyTracker = () => {
             />
           ) : (
             <DataTable 
+              // Passing growthData and weeklyData without day and date properties
               growthData={growthData}
               weeklyData={weeklyData}
-              tableViewMode={'week'}
+              tableViewMode={viewMode} // or use another mode if needed
               setTableViewMode={() => {}}
             />
           )}
-
           <PostForm posts={posts} setPosts={setPosts} />
-
           <CommunityPosts posts={posts} />
         </main>
-      </div>  
+      </div>
     </div>
   );
 };
