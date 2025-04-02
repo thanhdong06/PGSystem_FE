@@ -74,12 +74,12 @@ const Chart = ({ growthData, viewMode, setViewMode, activeMetric, setActiveMetri
           >
             Week
           </button>
-          <button
+          {/* <button
             className={`px-4 py-2 rounded-md transition-colors ${viewMode === 'day' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'}`}
             onClick={() => setViewMode('day')}
           >
             Day
-          </button>
+          </button> */}
         </div>
         <div>
           <button

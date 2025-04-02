@@ -1,27 +1,97 @@
 import React, { useState, useEffect } from 'react';
 import Chart from './Chart';
-import AddDataForm from './AddDataForm';
 import PostForm from './PostForm';
 import CommunityPosts from './CommunityPosts';
 import DataTable from './DataTable';
 
 const PregnancyTracker = () => {
-  // Sample data without 'day' and 'date'
-  const [growthData, setGrowthData] = useState([
+  // Initial data
+  const initialGrowthData = [
     { week: 8, weight: 5, height: 1.8 },
     { week: 12, weight: 45, height: 6.5 },
     { week: 16, weight: 110, height: 14 },
     { week: 20, weight: 320, height: 25 },
     { week: 24, weight: 640, height: 30 }
-  ]);
+  ];
 
-  // Compute weekly data from growthData (here it’s the same as growthData)
-  const weeklyData = growthData.reduce((acc, cur) => {
-    if (!acc.some(entry => entry.week === cur.week)) {
-      acc.push(cur);
+  // Load growth data from localStorage on component mount
+  const [growthData, setGrowthData] = useState(() => {
+    try {
+      const savedData = localStorage.getItem('growthData');
+      return savedData ? JSON.parse(savedData) : initialGrowthData;
+    } catch (error) {
+      console.error("Error loading growth data from localStorage:", error);
+      return initialGrowthData;
     }
-    return acc;
-  }, []);
+  });
+
+  // Save growth data to localStorage whenever it changes
+  useEffect(() => {
+    try {
+      localStorage.setItem('growthData', JSON.stringify(growthData));
+    } catch (error) {
+      console.error("Error saving growth data to localStorage:", error);
+    }
+  }, [growthData]);
+
+  // Form data state for the AddDataForm
+  const [formData, setFormData] = useState({
+    week: '',
+    weight: '',
+    height: ''
+  });
+
+  // Handle form input changes
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,  
+      [name]: value
+    });
+  };
+
+  // Handle form submission to add new growth data
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    
+    // Convert string values to numbers
+    const newEntry = {
+      week: parseInt(formData.week),
+      weight: parseFloat(formData.weight),
+      height: parseFloat(formData.height)
+    };
+    
+    // Validate that all fields have valid numbers
+    if (isNaN(newEntry.week) || isNaN(newEntry.weight) || isNaN(newEntry.height)) {
+      alert('Please enter valid numbers for all fields');
+      return;
+    }
+    
+    // Check if entry for this week already exists and update it instead of adding new
+    const existingEntryIndex = growthData.findIndex(item => item.week === newEntry.week);
+    
+    if (existingEntryIndex >= 0) {
+      // Update existing entry
+      const updatedData = [...growthData];
+      updatedData[existingEntryIndex] = newEntry;
+      setGrowthData(updatedData);
+    } else {
+      // Add new entry
+      setGrowthData([...growthData, newEntry]);
+    }
+    
+    // Reset form fields
+    setFormData({
+      week: '',
+      weight: '',
+      height: ''
+    });
+  };
+
+  // Compute weekly data from growthData
+  const weeklyData = React.useMemo(() => {
+    return [...growthData].sort((a, b) => a.week - b.week);
+  }, [growthData]);
 
   // State to toggle between Chart and Table views
   const [currentView, setCurrentView] = useState('chart');
@@ -40,7 +110,6 @@ const PregnancyTracker = () => {
       content: "Baby has been growing so fast this month. The doctor says everything is right on track!",
       likes: 12,
       comments: 5,
-      // date removed
     },
     {
       id: 2,
@@ -50,16 +119,19 @@ const PregnancyTracker = () => {
       content: "Has anyone else noticed their baby's weight measuring slightly below the average? Doctor isn't concerned but I'd love to hear others' experiences.",
       likes: 24,
       comments: 18,
-      // date removed
     }
   ]);
 
   // Get user information from localStorage
   const [user, setUser] = useState({ fullName: 'Sarah' });
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+    try {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      }
+    } catch (error) {
+      console.error("Error retrieving user data:", error);
     }
   }, []);
 
@@ -118,12 +190,65 @@ const PregnancyTracker = () => {
                 </li>
               </ul>
             </div>
-            <AddDataForm growthData={growthData} setGrowthData={setGrowthData} />
+            
+            {/* Add Data Form - directly integrated */}
+            <div className="mt-4">
+              <h3 className="font-medium mb-2">Add Growth Data</h3>
+              <form onSubmit={handleFormSubmit}>
+                <div className="grid grid-cols-3 gap-2 mb-2">
+                  <div>
+                    <label className="block text-sm mb-1">Week</label>
+                    <input
+                      type="number"
+                      name="week"
+                      value={formData.week}
+                      onChange={handleFormChange}
+                      className="w-full px-2 py-1 border rounded"
+                      min="1"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm mb-1">Weight (g)</label>
+                    <input
+                      type="number"
+                      name="weight"
+                      value={formData.weight}
+                      onChange={handleFormChange}
+                      className="w-full px-2 py-1 border rounded"
+                      step="0.1"
+                      min="0"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm mb-1">Height (cm)</label>
+                    <input
+                      type="number"
+                      name="height"
+                      value={formData.height}
+                      onChange={handleFormChange}
+                      className="w-full px-2 py-1 border rounded"
+                      step="0.1"
+                      min="0"
+                      required
+                    />
+                  </div>
+                </div>
+                <button
+                  type="submit"
+                  className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition-colors"
+                >
+                  Add Entry
+                </button>
+              </form>
+            </div>
+            
             <div className="bg-white rounded-lg shadow-lg p-6 mt-6">
               <h3 className="font-medium mb-3">Resources</h3>
               <ul className="space-y-3">
                 <li>
-                  <a href="#" className="text-blue-600 hover:underline flex items-center">
+                  <a href="#resources" className="text-blue-600 hover:underline flex items-center">
                     <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd" />
                     </svg>
@@ -131,7 +256,7 @@ const PregnancyTracker = () => {
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-blue-600 hover:underline flex items-center">
+                  <a href="#weekly-guide" className="text-blue-600 hover:underline flex items-center">
                     <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zM6 7a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
                     </svg>
@@ -139,7 +264,7 @@ const PregnancyTracker = () => {
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-blue-600 hover:underline flex items-center">
+                  <a href="#support-groups" className="text-blue-600 hover:underline flex items-center">
                     <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
                     </svg>
@@ -163,11 +288,10 @@ const PregnancyTracker = () => {
             />
           ) : (
             <DataTable 
-              // Passing growthData and weeklyData without day and date properties
               growthData={growthData}
               weeklyData={weeklyData}
-              tableViewMode={viewMode} // or use another mode if needed
-              setTableViewMode={() => {}}
+              tableViewMode={viewMode}
+              setTableViewMode={setViewMode}
             />
           )}
           <PostForm posts={posts} setPosts={setPosts} />

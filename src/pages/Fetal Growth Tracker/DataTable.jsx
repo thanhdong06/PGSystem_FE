@@ -17,12 +17,12 @@ const DataTable = ({ growthData, weeklyData, tableViewMode, setTableViewMode }) 
           >
             Week
           </button>
-          <button
+          {/* <button
             className={`px-3 py-1 rounded ${tableViewMode === 'day' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
             onClick={() => setTableViewMode('day')}
           >
             Day
-          </button>
+          </button> */}
         </div>
       </div>
       
