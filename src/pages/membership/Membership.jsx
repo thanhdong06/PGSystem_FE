@@ -101,7 +101,7 @@ const Membership = () => {
                   {plan.name}
                 </h2>
                 <div className="text-center mb-8">
-                  <span className="text-4xl font-bold">${plan.price}</span>
+                  <span className="text-4xl font-bold">{plan.price}VND</span>
                 </div>
                 <p className="text-gray-600 text-center mb-8">
                   {plan.description}
