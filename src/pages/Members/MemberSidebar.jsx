@@ -6,8 +6,10 @@ import {
   CalendarIcon,
   ChartBarIcon,
 } from "@heroicons/react/24/outline";
+import { PlusCircle } from "lucide-react";
 
 const iconClasses = `h-6 w-6`;
+
 
 const routes = [
   {
@@ -21,10 +23,10 @@ const routes = [
     name: "DoctorAppointment",
   },
   {
-    path: "/member/fetalgrowthtracker",
-    icon: <ChartBarIcon className={iconClasses} />,
-    name: "Fetal Growth Tracker",
-  },
+    path: "/member/createFetalProfile",
+    icon: <PlusCircle className={iconClasses} />,
+    name: "Create Fetal Profile",
+  }
 ];
 
 const MemberSidebar = () => {

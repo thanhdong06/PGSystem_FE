@@ -29,6 +29,7 @@ import "react-toastify/dist/ReactToastify.css";
 import MembershipManagement from "./pages/admin/Memberships/Memberships";
 import DoctorAppointmentReminder from "./pages/DoctorAppointment/DoctorAppointment";
 import MemberList from "./pages/admin/MemberList/MemberList";
+import CreateFetalProfile from "./pages/Fetal Growth Tracker/CreateFetalProfile";
 
 
 function App() {
@@ -65,6 +66,7 @@ function App() {
         { path: "reminder", element: <CalendarView /> },
         { path: "fetalgrowthtracker", element: <FatalGrowthTracker /> },
         { path: "DoctorAppointmentReminder", element: <DoctorAppointmentReminder/> },
+        {path: "createFetalProfile", element: <CreateFetalProfile/>}
       ],
     },
     {
