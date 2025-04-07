@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Table,
   Button,
@@ -7,10 +7,11 @@ import {
   Form,
   Input,
   DatePicker,
-  Select,
+  Spin,
 } from "antd";
 import { PlusOutlined, EyeOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const CreateFetalProfile = () => {
   const navigate = useNavigate();
@@ -18,31 +19,30 @@ const CreateFetalProfile = () => {
   const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
   const [isSelectModalVisible, setIsSelectModalVisible] = useState(false);
   const [selectedProfile, setSelectedProfile] = useState(null);
+  const [fetalProfiles, setFetalProfiles] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const [fetalProfiles, setFetalProfiles] = useState([
-    {
-      id: "FP001",
-      fetuses: [{ babyId: "B001", name: "Baby A", createdDate: "2025-01-15" }],
-      createdDate: "2025-01-15",
-    },
-    {
-      id: "FP002",
-      fetuses: [
-        { babyId: "B002", name: "Baby A", createdDate: "2025-02-01" },
-        { babyId: "B003", name: "Baby B", createdDate: "2025-02-01" },
-      ],
-      createdDate: "2025-02-01",
-    },
-    {
-      id: "FP003",
-      fetuses: [
-        { babyId: "B004", name: "Baby A", createdDate: "2025-03-10" },
-        { babyId: "B005", name: "Baby B", createdDate: "2025-03-10" },
-        { babyId: "B006", name: "Baby C", createdDate: "2025-03-10" },
-      ],
-      createdDate: "2025-03-10",
-    },
-  ]);
+  useEffect(() => {
+    const fetchProfiles = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get('https://676a399b863eaa5ac0ddb3ec.mockapi.io/api/fetalProfiles');
+        setFetalProfiles(response.data);
+      } catch (error) {
+        console.error('Error fetching profiles:', error);
+        setFetalProfiles([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProfiles();
+  }, []);
+
+  if (loading) {
+    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <Spin size="large" tip="Loading..." />
+    </div>;
+  }
 
   const columns = [
     {
@@ -106,26 +106,40 @@ const CreateFetalProfile = () => {
     setIsCreateModalVisible(true);
   };
 
-  const handleCreateOk = () => {
-    form.validateFields().then((values) => {
+  const handleCreateOk = async () => {
+    try {
+      const values = await form.validateFields();
       const profileCount = fetalProfiles.length + 1;
       const newProfileId = `FP${String(profileCount).padStart(3, "0")}`;
       const fetusNames = values.fetuses.split(",").map((name) => name.trim());
-
+      
       const newProfile = {
         id: newProfileId,
         fetuses: fetusNames.map((name, index) => ({
-          babyId: `B${String(profileCount * 10 + index + 1).padStart(3, "0")}`,
+          babyId:  `B${String(profileCount * 10 + index + 1).padStart(3, "0")}`,
           name: name || `Baby ${String.fromCharCode(65 + index)}`,
+          startingWeek: parseInt(values.startingWeek),
           createdDate: values.createdDate.format("YYYY-MM-DD"),
         })),
         createdDate: values.createdDate.format("YYYY-MM-DD"),
       };
-
+  
+      await axios.post('https://676a399b863eaa5ac0ddb3ec.mockapi.io/api/fetalProfiles', newProfile);
+      
+      for (const fetus of newProfile.fetuses) {
+        await axios.post('https://676a399b863eaa5ac0ddb3ec.mockapi.io/api/fetalGrowthData', {
+          babyId: fetus.babyId,
+          measurements: []
+        });
+      }
+  
       setFetalProfiles([...fetalProfiles, newProfile]);
       setIsCreateModalVisible(false);
       form.resetFields();
-    });
+    } catch (error) {
+      console.error('Error creating profile:', error);
+      alert('Failed to create profile');
+    }
   };
 
   const handleCreateCancel = () => {
@@ -137,6 +151,14 @@ const CreateFetalProfile = () => {
     setIsSelectModalVisible(false);
     setSelectedProfile(null);
   };
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <Spin size="large" tip="Loading..." />
+      </div>
+    );
+  }
 
   return (
     <div style={{ padding: "24px" }}>
@@ -160,7 +182,52 @@ const CreateFetalProfile = () => {
       </div>
 
       <Table
-        columns={columns}
+      bordered
+        columns={[
+          ...columns.slice(0, -1),
+          {
+            title: "Action",
+            key: "action",
+            render: (_, record) => (
+              <Space size="middle">
+                <Button
+                  type="primary"
+                  icon={<EyeOutlined />}
+                  onClick={() => handleView(record)}
+                >
+                  View
+                </Button>
+                <Button
+                  type="primary"
+                  danger
+                  onClick={() => {
+                    Modal.confirm({
+                      title: 'Are you sure you want to delete this profile?',
+                      content: 'This action cannot be undone.',
+                      okText: 'Yes',
+                      okType: 'danger',
+                      cancelText: 'No',
+                      onOk: async () => {
+                        try {
+                          await axios.delete(`https://676a399b863eaa5ac0ddb3ec.mockapi.io/api/fetalProfiles/${record.id}`);
+                          setFetalProfiles(fetalProfiles.filter(profile => profile.id !== record.id));
+                        } catch (error) {
+                          console.error('Error deleting profile:', error);
+                          Modal.error({
+                            title: 'Error',
+                            content: 'Failed to delete profile'
+                          });
+                        }
+                      }
+                    });
+                  }}
+                >
+                  Delete
+                </Button>
+              </Space>
+            ),
+          },
+        ]}
         dataSource={fetalProfiles}
         rowKey="id"
         pagination={{ pageSize: 10 }}
@@ -199,6 +266,33 @@ const CreateFetalProfile = () => {
               }
             />
           </Form.Item>
+          <Form.Item
+        name="startingWeek"
+        label="Current Week of Pregnancy"
+        rules={[
+          { 
+          required: true, 
+          message: "Current week of pregnancy is required." 
+          },
+          {
+          type: 'number',
+          transform: value => Number(value),
+          min: 8,
+          message: "Pregnancy week must be at least 8 weeks."
+          },
+          {
+          type: 'number',
+          transform: value => Number(value),
+          max: 42,
+          message: "Pregnancy week cannot exceed 42 weeks."
+          }
+        ]}
+        >
+        <Input
+          type="number"
+          placeholder="Enter week between 8-42"
+        />
+        </Form.Item>
         </Form>
       </Modal>
 
