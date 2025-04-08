@@ -44,6 +44,12 @@ const routes = [
   //   icon: <HomeIcon className={iconClasses} />,
   //   name: "Memberships",
   // },
+
+  {
+    path: "/admin/SubscriptionCreator",
+    icon:<UsersIcon className={iconClasses} />,
+    name: "SubscriptionCreator",
+  },
 ];
 
 const AdminSidebar = () => {

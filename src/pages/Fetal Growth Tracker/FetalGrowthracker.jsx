@@ -8,14 +8,30 @@ import axiosInstance from "../../api/axiosInstance";
 import { Spin } from "antd";
 import { standardGrowthData } from "./fetalData";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 const PregnancyTracker = () => {
   const location = useLocation();
   const babyId = location.state?.babyId; // fetusId từ state, không mặc định nữa
+  const profileId = location.state?.profileId; // fetusId từ state, không mặc định nữa
 
   const [growthData, setGrowthData] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const [fetusName, setFetusName] = useState(true);
+  
+  const fetchFetusName = async () => {
+    try {
+      const response = await axiosInstance.get(
+        `Fetus/Fetuses?pregnancyRecordId=${profileId}`
+      );
+      const fetuses = response.data.data || [];
+      const fetus = fetuses.find((f) => f.fetusId === babyId);
+      setFetusName(fetus ? fetus.nickname : "Unknown");
+    } catch (error) {
+      console.error("Error fetching fetus name:", error);
+      setFetusName("Unknown");
+    }
+  };
   const fetchGrowthData = async () => {
     if (!babyId) {
       console.error("No fetusId provided");
@@ -49,6 +65,7 @@ const PregnancyTracker = () => {
   };
   
   useEffect(() => {
+    fetchFetusName();
     fetchGrowthData();
   }, [babyId]);
 
@@ -176,7 +193,7 @@ const PregnancyTracker = () => {
         <h1 className="text-3xl font-bold text-blue-800">
           Pregnancy Growth Tracker Community
         </h1>
-        <p className="text-gray-600 mt-2">Tracking Baby ID: {babyId}</p>
+        <p className="text-gray-600 mt-2">Tracking Baby ID: <strong className="text-red-500 text-xl uppercase ">{fetusName}</strong></p>
       </header>
 
       <div className="flex justify-center mb-6">
@@ -247,7 +264,7 @@ const PregnancyTracker = () => {
             </div>
 
             <div className="mt-4">
-              <h3 className="font-medium mb-2">Add Growth Data for {babyId}</h3>
+              <h3 className="font-medium mb-2">Add Growth Data for {fetusName}</h3>
               <form onSubmit={handleFormSubmit}>
                 <div className="grid grid-cols-3 gap-2 mb-2">
                   <div>

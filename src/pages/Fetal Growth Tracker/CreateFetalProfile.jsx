@@ -126,16 +126,26 @@ const CreateFetalProfile = () => {
       setIsSelectModalVisible(true);
     } else {
       navigate("/member/fetalgrowthtracker", {
-        state: { babyId: profile.fetuses[0].fetusId },
+        state: { 
+          babyId: profile.fetuses[0].fetusId, 
+          profileId: profile.pid 
+        },
       });
     }
   };
-
+  
   const handleSelectBaby = (fetusId) => {
-    navigate("/member/fetalgrowthtracker", { state: { babyId: fetusId } });
+    navigate("/member/fetalgrowthtracker", { 
+      state: { 
+        babyId: fetusId, 
+        profileId: selectedProfile.pid 
+      } 
+    });
     setIsSelectModalVisible(false);
     setSelectedProfile(null);
   };
+
+  
 
   const showCreateModal = () => {
     setIsCreateModalVisible(true);
