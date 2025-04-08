@@ -1,20 +1,13 @@
 import React, { useState, useEffect } from "react";
+import { Table, Button, Space, Modal, Form, Input, Spin, Tag } from "antd";
 import {
-  Table,
-  Button,
-  Space,
-  Modal,
-  Form,
-  Input,
-  DatePicker,
-  Spin,
-  Tag,
-} from "antd";
-import { PlusOutlined, EyeOutlined } from "@ant-design/icons";
+  PlusOutlined,
+  EyeOutlined,
+  CloseCircleOutlined,
+} from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { toast } from "react-toastify";
-import axiosInstance from "../../api/axiosInstance"
+import axiosInstance from "../../api/axiosInstance";
 
 const CreateFetalProfile = () => {
   const navigate = useNavigate();
@@ -29,14 +22,11 @@ const CreateFetalProfile = () => {
   const fetchProfiles = async () => {
     try {
       setLoading(true);
-      const response = await axiosInstance.get(
-        "Pregnancy-record/Records",
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        }
-      );
+      const response = await axiosInstance.get("Pregnancy-record/Records", {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      });
       setFetalProfiles(response.data.data);
     } catch (error) {
       console.error("Error fetching profiles:", error);
@@ -61,7 +51,7 @@ const CreateFetalProfile = () => {
       title: "Fetus Nickname",
       key: "fetusNickname",
       render: (_, record) =>
-        record.fetuses?.map((fetus) => fetus.nickname).join(", ") || "N/A", 
+        record.fetuses?.map((fetus) => fetus.nickname).join(", ") || "N/A",
     },
     {
       title: "Start Date",
@@ -109,7 +99,7 @@ const CreateFetalProfile = () => {
           </Button>
           <Button
             type="primary"
-            style={{ backgroundColor: '#00CED1', borderColor: '#00CED1' }}
+            style={{ backgroundColor: "#00CED1", borderColor: "#00CED1" }}
             icon={<PlusOutlined />}
             onClick={() => showAddFetusModal(record)}
           >
@@ -126,26 +116,24 @@ const CreateFetalProfile = () => {
       setIsSelectModalVisible(true);
     } else {
       navigate("/member/fetalgrowthtracker", {
-        state: { 
-          babyId: profile.fetuses[0].fetusId, 
-          profileId: profile.pid 
+        state: {
+          babyId: profile.fetuses[0].fetusId,
+          profileId: profile.pid,
         },
       });
     }
   };
-  
+
   const handleSelectBaby = (fetusId) => {
-    navigate("/member/fetalgrowthtracker", { 
-      state: { 
-        babyId: fetusId, 
-        profileId: selectedProfile.pid 
-      } 
+    navigate("/member/fetalgrowthtracker", {
+      state: {
+        babyId: fetusId,
+        profileId: selectedProfile.pid,
+      },
     });
     setIsSelectModalVisible(false);
     setSelectedProfile(null);
   };
-
-  
 
   const showCreateModal = () => {
     setIsCreateModalVisible(true);
@@ -154,6 +142,25 @@ const CreateFetalProfile = () => {
   const showAddFetusModal = (profile) => {
     setSelectedProfile(profile);
     setIsAddFetusModalVisible(true);
+  };
+
+  const handleClose = async (pregnancyRecordId) => {
+    try {
+      await axiosInstance.put(
+        `Pregnancy-record/ClosePregnancyRecord?pregnancyRecordId=${pregnancyRecordId}`,
+        {},
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      toast.success("Record closed successfully");
+      await fetchProfiles();
+    } catch (error) {
+      console.error("Error closing record:", error);
+      toast.error(error.response?.data?.error);
+    }
   };
 
   const handleCreateOk = async () => {
@@ -168,15 +175,11 @@ const CreateFetalProfile = () => {
         ],
       };
 
-      await axiosInstance.post(
-        "Pregnancy-record/Create",
-        newProfile,
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        }
-      );
+      await axiosInstance.post("Pregnancy-record/Create", newProfile, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      });
 
       await fetchProfiles();
       setIsCreateModalVisible(false);
@@ -197,15 +200,11 @@ const CreateFetalProfile = () => {
         pregnancyRecordId: selectedProfile.pid,
       };
 
-      await axiosInstance.post(
-        "Fetus/fetuses",
-        newFetus,
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        }
-      );
+      await axiosInstance.post("Fetus/fetuses", newFetus, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      });
 
       await fetchProfiles();
       setIsAddFetusModalVisible(false);
@@ -285,7 +284,7 @@ const CreateFetalProfile = () => {
                       onOk: async () => {
                         try {
                           await axiosInstance.delete(
-                           `Pregnancy-record/DeletePregnancyRecord?pregnancyRecordId=${record.pid}`,
+                            `https://pgsystem-g2ehcecxdkd5bjex.southeastasia-01.azurewebsites.net/api/Pregnancy-record/DeletePregnancyRecord?pregnancyRecordId=${record.pid}`,
                             {
                               headers: {
                                 Authorization:
@@ -313,11 +312,21 @@ const CreateFetalProfile = () => {
                   Delete
                 </Button>
                 <Button
-                  color="cyan" variant="solid"
+                  color="cyan"
+                  variant="solid"
                   icon={<PlusOutlined />}
                   onClick={() => showAddFetusModal(record)}
                 >
                   Add Baby
+                </Button>
+                <Button
+                disabled={record.status === "Closed"}
+                  color="yellow"
+                  variant="solid"
+                  icon={<CloseCircleOutlined />}
+                  onClick={() => handleClose(record.pid)}
+                >
+                  Close Record
                 </Button>
               </Space>
             ),

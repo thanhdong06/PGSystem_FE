@@ -4,22 +4,28 @@ import Chart from "./Chart";
 import PostForm from "./PostForm";
 import CommunityPosts from "./CommunityPosts";
 import DataTable from "./DataTable";
-import axiosInstance from "../../api/axiosInstance"; 
+import axiosInstance from "../../api/axiosInstance";
 import { Spin } from "antd";
 import { standardGrowthData } from "./fetalData";
 import { toast } from "react-toastify";
-import axios from "axios";
 
 const PregnancyTracker = () => {
   const location = useLocation();
-  const babyId = location.state?.babyId; // fetusId từ state, không mặc định nữa
-  const profileId = location.state?.profileId; // fetusId từ state, không mặc định nữa
+  const babyId = location.state?.babyId;
+  const profileId = location.state?.profileId;
 
   const [growthData, setGrowthData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [fetusName, setFetusName] = useState(true);
-  
+  const [fetusName, setFetusName] = useState("");
+  const [warnings, setWarnings] = useState({});
+
+  console.log(warnings)
+
   const fetchFetusName = async () => {
+    if (!profileId) {
+      setFetusName("Unknown");
+      return;
+    }
     try {
       const response = await axiosInstance.get(
         `Fetus/Fetuses?pregnancyRecordId=${profileId}`
@@ -32,6 +38,7 @@ const PregnancyTracker = () => {
       setFetusName("Unknown");
     }
   };
+
   const fetchGrowthData = async () => {
     if (!babyId) {
       console.error("No fetusId provided");
@@ -45,15 +52,15 @@ const PregnancyTracker = () => {
       const response = await axiosInstance.get(
         `Fetus/Measurements/Fetus?fetusId=${babyId}`
       );
-      const data = response.data.data || []; 
+      const data = response.data.data || [];
       setGrowthData(
         data.map((item) => ({
-          measurementId: item.measurementId,
+          measurementId: item.measurementId, // Đảm bảo lưu measurementId
           week: item.week,
           weight: item.weightEstimate,
-          height: item.length, 
+          height: item.length,
           babyId: babyId,
-          dateMeasured: item.dateMeasured, 
+          dateMeasured: item.dateMeasured,
         }))
       );
     } catch (error) {
@@ -63,11 +70,13 @@ const PregnancyTracker = () => {
       setLoading(false);
     }
   };
-  
+
   useEffect(() => {
-    fetchFetusName();
-    fetchGrowthData();
-  }, [babyId]);
+    if (profileId && babyId) {
+      fetchFetusName();
+      fetchGrowthData();
+    }
+  }, [babyId, profileId]); // Thêm profileId vào dependency
 
   const [formData, setFormData] = useState({
     week: "",
@@ -85,43 +94,41 @@ const PregnancyTracker = () => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-
+  
     const newEntry = {
       babyId,
       week: parseInt(formData.week),
       weight: parseFloat(formData.weight),
       height: parseFloat(formData.height),
     };
-
+  
     if (isNaN(newEntry.week) || isNaN(newEntry.weight) || isNaN(newEntry.height)) {
-      alert("Please enter valid numbers for all fields");
+      toast.error("Please enter valid numbers for all fields");
       return;
     }
-
+  
     try {
       setLoading(true);
-      await axiosInstance.post(`Fetus/FetusMeasurements?fetusId=${babyId}`, {
+      const res = await axiosInstance.post(`Fetus/FetusMeasurements?fetusId=${babyId}`, {
         fetusId: babyId,
-        dateMeasured: new Date().toISOString().split("T")[0], 
+        dateMeasured: new Date().toISOString().split("T")[0],
         length: newEntry.height,
         weightEstimate: newEntry.weight,
         week: newEntry.week,
       });
 
-      const response = await axiosInstance.get(
-        `Fetus/Measurements/Fetus?fetusId=${babyId}`
-      );
-      const updatedData = response.data.data || [];
-      setGrowthData(
-        updatedData.map((item) => ({
-          week: item.week,
-          weight: item.weightEstimate,
-          height: item.length,
-          babyId: babyId,
-          dateMeasured: item.dateMeasured,
-        }))
-      );
-
+      if (res.data.data.warnings && res.data.data.warnings.length > 0) {
+        res.data.data.warnings.forEach((warning) => {
+          const cleanedWarning = warning.replace(/\\n/g, "").replace(/^"|"$/g, "");
+          toast.warning(cleanedWarning);
+        });
+        setWarnings((prev) => ({
+          ...prev,
+          [res.data.data.measurementId]: res.data.data.warnings,
+        }));
+      }
+      await fetchGrowthData();
+  
       setFormData({
         week: "",
         weight: "",
@@ -135,6 +142,10 @@ const PregnancyTracker = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    console.log("Updated warnings:", warnings);
+  }, [warnings]);
 
   const weeklyData = React.useMemo(() => {
     return [...growthData].sort((a, b) => a.week - b.week);
@@ -193,7 +204,12 @@ const PregnancyTracker = () => {
         <h1 className="text-3xl font-bold text-blue-800">
           Pregnancy Growth Tracker Community
         </h1>
-        <p className="text-gray-600 mt-2">Tracking Baby ID: <strong className="text-red-500 text-xl uppercase ">{fetusName}</strong></p>
+        <p className="text-gray-600 mt-2">
+          Tracking Baby ID:
+          <strong className="text-red-600 text-xl capitalize ml-2">
+            {fetusName}
+          </strong>
+        </p>
       </header>
 
       <div className="flex justify-center mb-6">
@@ -334,6 +350,7 @@ const PregnancyTracker = () => {
               fetchGrowthData={fetchGrowthData}
               tableViewMode={viewMode}
               setTableViewMode={setViewMode}
+              warnings={warnings}
             />
           )}
           <PostForm posts={posts} setPosts={setPosts} />
